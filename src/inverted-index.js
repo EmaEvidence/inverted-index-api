@@ -12,15 +12,15 @@
     constructor(book) {
       this.book = book;
     }
-
     /**
      * checkIfArray - checks to see if book is actually a JSON array
      *
      * @return {boolean}  the result for the check
      */
     checkIfArrayIsValid() {
-      const bookToCheck = this.book;
-      return bookToCheck + true;
+      if (this.book.length === 'undefined' && this.book[0] === undefined) {
+        return true;
+      }
     }
 
     /**
@@ -29,8 +29,9 @@
      * @return {boolean}  result of the check
      */
     checkIfArrayIsEmpty() {
-      const bookToCheck = this.book;
-      return bookToCheck + true;
+      if (this.book === []) {
+        return true;
+      }
     }
 
     /**
@@ -39,32 +40,56 @@
      * @return {boolean}  the result of the check
      */
     checkIfArrayIsMalformed() {
-      const bookToCheck = this.book;
-      return bookToCheck + true;
+      // return bookToCheck + true;
+    }
+
+
+    /**
+     * get index - description
+     *
+     * @return {type}  description
+     */
+    createIndex() {
+      const indexObject = {};
+      let token = [];
+      const book = this.book;
+      const bookLength = book.length;
+      for (let a = 0; a < bookLength; a += 1) {
+        const bookContent = book[a];
+        const title = bookContent.title;
+        const content = bookContent.text;
+        let fullBook = title + content;
+        fullBook = (fullBook.toLower()).replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>{}[]\\\/]/gi, '').split(' ');
+        if (token === []) {
+          token = fullBook;
+        }
+        token = token.concat(fullBook);
+      }
+      return indexObject;
     }
 
     /**
      * createIndex - description
      *
-     * @return {JSON Object}  description
+     * @return {type}  description
      */
-    createIndex() {
+    getIndex() {
       const book = this.book;
+      // const indexObject = {};
       const validityResult = book.checkIfArrayIsValid();
       if (validityResult) {
         const emptyResult = book.checkIfArrayIsEmpty();
-        if (emptyResult){
+        if (emptyResult) {
           const malformedResult = book.checkIfArrayIsMalformed();
           if (malformedResult) {
+               // indexObject = 1;
           } else {
             return 'Expects a Non-Empty JSON Object';
           }
-        }
-        else {
+        } else {
           return 'Expects a Non-Empty JSON Object';
         }
-      }
-      else {
+      } else {
         return 'Expects a valid JSON Object';
       }
     }

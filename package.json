@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "nodemon --exec babel-node test/inverted-index-testSpec.js",
+    ""
+    "test": "nodemon gulp run-test",
     "dev": "nodemon --exec babel-node src/inverted-index.js",
     "prestart": "babel src --out-dir dist",
     "start": "node dist/inverted-index.js"
@@ -48,6 +49,7 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-istanbul-report": "0.0.1",
+    "gulp-jasmine-node": "^1.0.7",
     "gulp-nodemon": "^2.2.1"
   }
 }

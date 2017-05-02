@@ -1,11 +1,21 @@
 import gulp from 'gulp';
-import jasmine from 'gulp-jasmine';
+import jasmineNode from 'gulp-jasmine-node';
 import babel from 'gulp-babel';
-// const gulp = require('gulp');
+// import babel from 'gulp-babel';
+
+gulp.task('transpile', () => {
+  return gulp.src('src/inverted-index.js')
+  .pipe(babel({
+    presets: ['es2015']
+  }))
+  .pipe(gulp.dest('../dist/'));
+});
 
 gulp.task('default', ['run-tests']);
-gulp.task('run-tests', () => {
-  gulp.src('tests/inverted-index-testSpec.js')
-        // gulp-jasmine works on filepaths so you can't have any plugins before it
-        .pipe(jasmine());
+
+gulp.task('run-test', ['transpile'], () => {
+  return gulp.src(['tests/*Spec.js'])
+  .pipe(jasmineNode({
+    timeout: 10000
+  }));
 });

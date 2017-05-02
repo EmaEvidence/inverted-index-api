@@ -1,0 +1,40 @@
+{
+  "name": "inverted-index",
+  "version": "1.0.0",
+  "description": "Inverted Indexing App",
+  "main": "src/inverted-index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmaEvidence/inverted-index-api.git"
+  },
+  "keywords": [
+    "Inverted",
+    "Index"
+  ],
+  "author": "EmaEvidence",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EmaEvidence/inverted-index-api/issues"
+  },
+  "dependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "g": "^2.0.1",
+    "gulp": "^3.9.1",
+    "gulp-jasmine": "^2.4.2",
+    "jasmine": "^2.6.0"
+  },
+  "devDependencies": {
+    "dotenv": "^4.0.0",
+    "gulp": "^3.9.1",
+    "gulp-istanbul-report": "0.0.1",
+    "supertest": "^3.0.0"
+  }
+}

@@ -7,8 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    ""
-    "test": "nodemon gulp run-test",
+    "test": "gulp run-test",
     "dev": "nodemon --exec babel-node src/inverted-index.js",
     "prestart": "babel src --out-dir dist",
     "start": "node dist/inverted-index.js"

@@ -8,7 +8,7 @@ gulp.task('transpile', () => {
   .pipe(babel({
     presets: ['es2015']
   }))
-  .pipe(gulp.dest('../dist/'));
+  .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('default', ['run-tests']);

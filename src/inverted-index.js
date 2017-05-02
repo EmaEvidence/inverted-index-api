@@ -1,7 +1,14 @@
-const name = 'Emmanuel';
-const skill = 'Javascript';
-// defines the owner
-function me(){
-  console.log (`My name is ${name} and am skilled in ${skill}`);
-}
-me();
+import express from 'express';
+
+const app = express();
+const users = ['John', 'Betty', 'Hal'];
+
+app.post('/api/create', (req, res) => {
+  res.json(users);
+});
+
+app.post('/api/search', (req, res) => {
+  res.json('users');
+});
+
+module.exports = app;

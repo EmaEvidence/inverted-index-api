@@ -9,8 +9,9 @@
      * @param  {Array} book description
      *
      */
-    constructor(book) {
-      this.book = book;
+    constructor(fileName, fileContent) {
+      this.fileName = fileName;
+      this.fileContent = fileContent;
     }
     /**
      * checkIfArray - checks to see if book is actually a JSON array
@@ -51,6 +52,7 @@
      */
     createIndex() {
       const indexObject = {};
+      let wordToken = [];
       let token = [];
       const book = this.book;
       const bookLength = book.length;
@@ -65,6 +67,10 @@
         }
         token = token.concat(fullBook);
       }
+      for(let b = 0; b < token.length; b++) {
+        if(wordToken.indexof(token[b]) < 0) {
+            wordToken.push(this[i]);
+        }
       return indexObject;
     }
 

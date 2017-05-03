@@ -11,7 +11,7 @@ gulp.task('transpile', () => {
   .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('default', ['run-tests']);
+gulp.task('default', ['run-test']);
 
 gulp.task('run-test', ['transpile'], () => {
   return gulp.src(['tests/*Spec.js'])

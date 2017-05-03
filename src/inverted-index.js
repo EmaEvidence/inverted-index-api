@@ -29,22 +29,23 @@ class InvertedIndex {
     if (typeof data === 'object') {
       if (data.length === undefined && data[0] === undefined) {
         result = false;
-        throw new Error('An Object but not a JSON Array');
+        throw new Error('An Invalid JSON Array');
+      } else if (data.length === 0) {
+        result = false;
+        throw new Error('Book is Empty');
       } else {
-        if (data.length === 0) {
-          result = false;
-          throw new Error('Book is Empty');
-        } else {
-          data.forEach((file) => {
-            const fileType = typeof file.text;
-            if (fileType !== 'string') {
-              result = 'Malformed Array';
-              throw new Error('file is malformed');
-            } else {
-              result = true;
-            }
-          });
-        }
+        data.forEach((file) => {
+          const fileTitleType = typeof file.title;
+          const fileTitle = file.title;
+          const fileTextType = typeof file.text;
+          const fileText = file.text;
+          if ((fileTitleType !== 'string' || fileTitle === ' ') || (fileTextType !== 'string' || fileText === ' ')) {
+            result = 'Malformed Array';
+            throw new Error('file is malformed');
+          } else {
+            result = true;
+          }
+        });
       }
     } else {
       result = false;
@@ -64,7 +65,7 @@ class InvertedIndex {
     const wordToken = {};
     if (this.checkIfArrayIsValid(file) === true) {
       file.forEach((indFile) => {
-        token += indFile.text + ' ';
+        token += `${indFile.text} `;
       });
       token = token.replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' ');
       let fileIndex = 0;
@@ -96,7 +97,7 @@ class InvertedIndex {
    *
    * @param  {object} index    index created by createIndex method.
    * @param  {string} fileName optional the name of file to search from.
-   * @param  {array} ...terms words to search for
+   * @param  {array} terms words to search for
    * @return {object}          result of the search.
    */
   searchIndex(index, fileName, ...terms) {
@@ -126,3 +127,4 @@ class InvertedIndex {
     return searchIndexResult;
   }
   }
+export default InvertedIndex();

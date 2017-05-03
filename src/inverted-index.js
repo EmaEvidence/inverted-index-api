@@ -89,29 +89,31 @@ class InvertedIndex {
     this.indexObject = wordToken;
     return wordToken;
   }
-
-  /**
-   * searchIndex - description
-   *
-   * @param  {type} index    description
-   * @param  {type} fileName description
-   * @param  {type} ...terms description
-   * @return {type}          description
-   */
   searchIndex(index, fileName, ...terms){
-      this.index = this.indexObject;
-      this.fileName = fileName;
-      let searchTerms = [];
-      terms.forEach((indTerm) => {
-        if (typeof indTerm === 'string'){
-          searchTerms.push(indTerm);
+    this.index = this.indexObject;
+    this.fileName = fileName;
+    let searchTerms = [];
+    let searchIndeResult = {};
+    terms.forEach((indTerm) => {
+      if (typeof indTerm === 'string'){
+        searchTerms.push(indTerm);
+      }
+      else{
+        indTerm.forEach((indTermInArray) => {
+          searchTerms.push(indTermInArray);
+        });
+      }
+    });
+      searchTerms.forEach((term) => {
+        if (this.index.hasOwnProperty(term)){
+          searchIndeResult[term] = this.index[term];
         }
         else{
-          indTerm.forEach((indTermInArray) => {
-            searchTerms.push(indTermInArray);
-          });
+          searchIndeResult[term] = '-';
         }
+
       });
-      return searchTerms;
-    }
+    //return searchTerms;
+    return searchIndeResult;
+  }
   }

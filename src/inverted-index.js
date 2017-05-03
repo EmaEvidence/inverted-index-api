@@ -56,7 +56,7 @@ class InvertedIndex {
   /**
    * createIndex - creates an index from the supplied JSON array
    *
-   * @return {type}  description
+   * @return {object}  description
    */
   createIndex() {
     const file = this.fileContent;
@@ -86,6 +86,32 @@ class InvertedIndex {
         fileIndex += 1;
       });
     }
+    this.indexObject = wordToken;
     return wordToken;
   }
+
+  /**
+   * searchIndex - description
+   *
+   * @param  {type} index    description
+   * @param  {type} fileName description
+   * @param  {type} ...terms description
+   * @return {type}          description
+   */
+  searchIndex(index, fileName, ...terms){
+      this.index = this.indexObject;
+      this.fileName = fileName;
+      let searchTerms = [];
+      terms.forEach((indTerm) => {
+        if (typeof indTerm === 'string'){
+          searchTerms.push(indTerm);
+        }
+        else{
+          indTerm.forEach((indTermInArray) => {
+            searchTerms.push(indTermInArray);
+          });
+        }
+      });
+      return searchTerms;
+    }
   }

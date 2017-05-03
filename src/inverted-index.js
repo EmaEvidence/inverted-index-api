@@ -61,10 +61,10 @@ class InvertedIndex {
   createIndex() {
     const file = this.fileContent;
     let token = '';
-    let wordToken = {};
+    const wordToken = {};
     if (this.checkIfArrayIsValid(file) === true) {
       file.forEach((indFile) => {
-        token += (indFile.text) + ' ';
+        token += indFile.text + ' ';
       });
       token = token.replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' ');
       let fileIndex = 0;
@@ -89,31 +89,40 @@ class InvertedIndex {
     this.indexObject = wordToken;
     return wordToken;
   }
-  searchIndex(index, fileName, ...terms){
+
+
+  /**
+   * searchIndex - searches for the presence of supplied term(s) in the created index.
+   *
+   * @param  {object} index    index created by createIndex method.
+   * @param  {string} fileName optional the name of file to search from.
+   * @param  {array} ...terms words to search for
+   * @return {object}          result of the search.
+   */
+  searchIndex(index, fileName, ...terms) {
     this.index = this.indexObject;
     this.fileName = fileName;
-    let searchTerms = [];
-    let searchIndeResult = {};
+    const searchTerms = [];
+    const searchIndexResult = {};
     terms.forEach((indTerm) => {
-      if (typeof indTerm === 'string'){
+      if (typeof indTerm === 'string') {
         searchTerms.push(indTerm);
-      }
-      else{
+      } else {
+        if ((typeof indTerm === 'number' || indTerm.length === 'undefined')) {
+          throw new Error('Invalid search Term');
+        }
         indTerm.forEach((indTermInArray) => {
           searchTerms.push(indTermInArray);
         });
       }
     });
-      searchTerms.forEach((term) => {
-        if (this.index.hasOwnProperty(term)){
-          searchIndeResult[term] = this.index[term];
-        }
-        else{
-          searchIndeResult[term] = '-';
-        }
-
-      });
-    //return searchTerms;
-    return searchIndeResult;
+    searchTerms.forEach((term) => {
+      if (this.index.hasOwnProperty(term)) {
+        searchIndexResult[term] = this.index[term];
+      } else {
+        searchIndexResult[term] = '-';
+      }
+    });
+    return searchIndexResult;
   }
   }

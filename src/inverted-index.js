@@ -73,7 +73,13 @@ class InvertedIndex {
           if (!wordToken.hasOwnProperty(indToken) && indToken !== '') {
             const searchResult = (indFile.text).toLowerCase().search(indToken);
             if (searchResult >= 0) {
-              wordToken[indToken].push(fileIndex); //= fileIndex;
+              wordToken[indToken] = [fileIndex];
+            }
+          } else if (wordToken.hasOwnProperty(indToken) && indToken !== '') {
+            const searchResult = (file.text).toLowerCase().search(indToken);
+            if (searchResult >= 0) {
+              const alreadyIndex = wordToken[indToken];
+              wordToken[indToken] = Array.from(new Set(alreadyIndex.concat([fileIndex])));
             }
           }
         });

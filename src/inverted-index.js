@@ -41,7 +41,7 @@ class InvertedIndex {
           const fileText = file.text;
           if ((fileTitleType !== 'string' || fileTitle === ' ') || (fileTextType !== 'string' || fileText === ' ')) {
             result = 'Malformed Array';
-            throw new Error('file is malformed');
+            throw new Error('File is malformed');
           } else {
             result = true;
           }
@@ -127,4 +127,4 @@ class InvertedIndex {
     return searchIndexResult;
   }
   }
-export default InvertedIndex();
+module.exports = InvertedIndex;

@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "nodemon --exec babel-node test/inverted-index-testSpec.js",
+    "test": "gulp run-test",
     "dev": "nodemon --exec babel-node src/inverted-index.js",
     "prestart": "babel src --out-dir dist",
     "start": "node dist/inverted-index.js"
@@ -29,6 +29,7 @@
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
+    "expect": "^1.20.2",
     "express": "^4.15.2",
     "g": "^2.0.1",
     "gulp": "^3.9.1",
@@ -48,6 +49,7 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-istanbul-report": "0.0.1",
+    "gulp-jasmine-node": "^1.0.7",
     "gulp-nodemon": "^2.2.1"
   }
 }

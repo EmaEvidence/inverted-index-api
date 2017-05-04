@@ -1,35 +1,26 @@
-import supertest from 'supertest';
-import app from '../src/inverted-index';
+import expect from 'expect';
+import InvertedIndex from '../dist/inverted-index';
+import valid from '../fixtures/valid.json';
+import invalid from '../fixtures/invalid.json';
+import malformed from '../fixtures/malformed.json';
+import empty from '../fixtures/empty.json';
 
-describe('POST/api/create', () => {
-  it('file content should be a valid JSON a valid JSON array', (done) => {
-    supertest(app)
-      .post('/api/create')
-      .set('Accept', 'application/json')
-      .send({ })
-      .expect((res) => {
-        res.body = 'Please Upload a non empty JSON Array';
-      })
-      .expect(200, {
-      }, done);
+
+describe('Test for validity of JSON array supplied as a digitized book', () => {
+  it('should return true for valid JSON ', () => {
+    const invertIndex = new InvertedIndex(valid);
+    expect(invertIndex.checkIfArrayIsValid(valid)).toBe(true);
   });
-});
-
-describe('POST /api/search', () => {
-  it('should respond with json', (done) => {
-    supertest(app)
-      .post('/api/create')
-      .set('Accept', 'application/json')
-      .send({})
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end((err, res) => {
-        if (err) {
-          done.fail(err);
-        } else {
-          res.body = ('Passed');
-          done();
-        }
-      });
+  it('should return Book is Empty ', () => {
+    const invertIndex = new InvertedIndex(empty);
+    expect(invertIndex.checkIfArrayIsValid(empty)).toThrowError('Book is Empty');
+  });
+  it('should return File is Malformed', () => {
+    const invertIndex = new InvertedIndex(malformed);
+    expect(invertIndex.checkIfArrayIsValid(malformed)).toThrowError('File is Malformed');
+  });
+  it('should return An Invalid JSON Array ', () => {
+    const invertIndex = new InvertedIndex(invalid);
+    expect(invertIndex.checkIfArrayIsValid(invalid)).toThrowError('Invalid JSON Array');
   });
 });

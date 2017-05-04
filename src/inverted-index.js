@@ -1,3 +1,4 @@
+/* eslint linebreak-style: ["error", "windows"]*/
 /**
  * the inverted index class that creates indices from supplied JSON Array objects.
  */
@@ -104,10 +105,14 @@ class InvertedIndex {
   validateIndex(data) {
     let result = true;
     for (const book in data) {
-      for (const token in data[book]) {
-        result = Array.isArray(data[book][token]);
-        if (result === false) {
-          return false;
+      if (Object.prototype.hasOwnProperty.call(data, book)) {
+        for (const token in data[book]) {
+          if (Object.prototype.hasOwnProperty.call(data[book], token)) {
+            result = Array.isArray(data[book][token]);
+            if (result === false) {
+              return false;
+            }
+          }
         }
       }
       return result;
@@ -177,9 +182,11 @@ class InvertedIndex {
         const searchTerms = this.resolveTerms(fileName);
         const searchIndexResult = {};
         for (const book in index){
+          if (Object.prototype.hasOwnProperty.call(book, index)) {
             const searchBase = index[book];
             const tempSearchResult = this.search(searchBase, searchTerms);
-          searchIndexResult[book] = tempSearchResult;
+            searchIndexResult[book] = tempSearchResult;
+          }
         }
         searchIndexResults = searchIndexResult;
       }

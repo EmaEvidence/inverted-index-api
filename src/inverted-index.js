@@ -11,12 +11,12 @@ class InvertedIndex {
    * @param  {object} fileContent JSON array
    * @return {type}             description
    */
-  constructor(fileName, fileContent) {
-    this.fileName = fileName;
-    this.fileContent = fileContent;
-    this.indexObject = {};
+  constructor() {
+    this.fileName = '';
+    this.fileContent = '';
+    this.CreatedIndexObject = {};
+    this.searchIndexResult = {};
   }
-
 
    /**
     * checkIfArrayIsValid - checks the validity of the supplied JSON array;
@@ -24,28 +24,29 @@ class InvertedIndex {
     * @param  {object} data the file to be tested
     * @return {boolean}      the result of the test
     */
-  checkIfArrayIsValid(data) {
+  checkIfArrayIsValid(data = this.fileContent) {
     let result = '';
     if (typeof data === 'object') {
       if (data.length === undefined && data[0] === undefined) {
         result = false;
-        throw new Error('An Invalid JSON Array');
-      } else if (data.length === 0) {
-        result = false;
-        throw new Error('Book is Empty');
+        throw new Error('An Object but not a JSON Array');
       } else {
-        data.forEach((file) => {
-          const fileTitleType = typeof file.title;
-          const fileTitle = file.title;
-          const fileTextType = typeof file.text;
-          const fileText = file.text;
-          if ((fileTitleType !== 'string' || fileTitle === ' ') || (fileTextType !== 'string' || fileText === ' ')) {
-            result = 'Malformed Array';
-            throw new Error('File is malformed');
-          } else {
-            result = true;
-          }
-        });
+        if (data.length === 0) {
+          result = false;
+          throw new Error('Book is Empty');
+        } else {
+          data.forEach((file) => {
+            const fileTitleType = typeof file.title;
+            const fileTitle = file.title;
+            const fileTextType = typeof file.text;
+            const fileText = file.text;
+            if ((fileTitleType !== 'string' || fileTitle === ' ') || (fileTextType !== 'string' || fileText === ' ')) {
+              throw new Error('file is malformed');
+            } else {
+              result = true;
+            }
+          });
+        }
       }
     } else {
       result = false;
@@ -55,29 +56,33 @@ class InvertedIndex {
   }
 
   /**
-   * createIndex - creates an index from the supplied JSON array
+   * createIndex - description
    *
-   * @return {object}  description
+   * @param  {type} fileName    description
+   * @param  {type} fileContent description
+   * @return {type}             description
    */
-  createIndex() {
-    const file = this.fileContent;
+  createIndex(fileName, fileContent) {
+    this.fileName = fileName;
+    this.fileContent = fileContent;
     let token = '';
     const wordToken = {};
-    if (this.checkIfArrayIsValid(file) === true) {
-      file.forEach((indFile) => {
-        token += `${indFile.text} `;
+    if (this.checkIfArrayIsValid(fileContent) === true) {
+        // console.log(fileContent);
+      fileContent.forEach((fileCont) => {
+        token += `${fileCont.text} `;
       });
       token = token.replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' ');
       let fileIndex = 0;
-      file.forEach((indFile) => {
+      fileContent.forEach((fileCont) => {
         token.forEach((indToken) => {
-          if (!wordToken.hasOwnProperty(indToken) && indToken !== '') {
-            const searchResult = (indFile.text).toLowerCase().search(indToken);
+          if (!Object.prototype.hasOwnProperty.call(wordToken, indToken) && indToken !== '') {
+            const searchResult = (fileCont.text).toLowerCase().search(indToken);
             if (searchResult >= 0) {
               wordToken[indToken] = [fileIndex];
             }
-          } else if (wordToken.hasOwnProperty(indToken) && indToken !== '') {
-            const searchResult = (file.text).toLowerCase().search(indToken);
+          } else if (Object.prototype.hasOwnProperty.call(wordToken, indToken) && indToken !== '') {
+            const searchResult = (fileCont.text).toLowerCase().search(indToken);
             if (searchResult >= 0) {
               const alreadyIndex = wordToken[indToken];
               wordToken[indToken] = Array.from(new Set(alreadyIndex.concat([fileIndex])));
@@ -87,10 +92,13 @@ class InvertedIndex {
         fileIndex += 1;
       });
     }
-    this.indexObject = wordToken;
-    return wordToken;
+      // this.indexObject = wordToken;
+      // return token;
+    this.CreatedIndexObject[this.fileName] = wordToken;
+      // return wordToken;
+    const indexObject = this.CreatedIndexObject;
+    return indexObject;
   }
-
 
   /**
    * searchIndex - searches for the presence of supplied term(s) in the created index.
@@ -118,7 +126,7 @@ class InvertedIndex {
       }
     });
     searchTerms.forEach((term) => {
-      if (this.index.hasOwnProperty(term)) {
+      if (Object.prototype.hasOwnProperty.call(this.index, term)) {
         searchIndexResult[term] = this.index[term];
       } else {
         searchIndexResult[term] = '-';
@@ -127,4 +135,4 @@ class InvertedIndex {
     return searchIndexResult;
   }
   }
-module.exports = InvertedIndex;
+export default InvertedIndex;

@@ -131,13 +131,13 @@ class InvertedIndex {
     }
     terms.forEach((indTerm) => {
       if (typeof indTerm === 'string' || typeof indTerm === 'number') {
-        searchTerms.push(indTerm);
+        searchTerms.push(indTerm.toLowerCase());
       } else {
         if ((indTerm.length === 'undefined')) {
           throw new Error('Invalid search Term');
         }
         indTerm.forEach((indTermInArray) => {
-          searchTerms.push(indTermInArray);
+          searchTerms.push(indTermInArray.toLowerCase());
         });
       }
     });
@@ -167,8 +167,7 @@ class InvertedIndex {
    *
    * @param  {array} index    the index to search from
    * @param  {string} fileName the name of the file to search from optional
-   * @param  {object} ...terms terms to search for
-   * @return {object}          search index
+   * @return {JSON}          search index
    */
   searchIndex(index, fileName, ...terms) {
     let searchIndexResults = '';
@@ -182,7 +181,7 @@ class InvertedIndex {
         const searchTerms = this.resolveTerms(fileName);
         const searchIndexResult = {};
         for (const book in index){
-          if (Object.prototype.hasOwnProperty.call(book, index)) {
+          if (Object.prototype.hasOwnProperty.call(index, book)) {
             const searchBase = index[book];
             const tempSearchResult = this.search(searchBase, searchTerms);
             searchIndexResult[book] = tempSearchResult;

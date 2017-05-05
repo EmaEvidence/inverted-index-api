@@ -1,3 +1,4 @@
+/* eslint linebreak-style: ["error", "windows"]*/
 import expect from 'expect';
 import InvertedIndex from '../dist/inverted-index';
 import valid from '../fixtures/valid.json';

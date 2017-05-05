@@ -44,7 +44,7 @@ var InvertedIndex = function () {
       if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') {
         if (data.length === undefined && data[0] === undefined) {
           result = false;
-          throw new Error('Invalid JSON Object');
+          throw new Error('Invalid JSON Array');
         } else {
           if (data.length === 0) {
             result = false;
@@ -65,7 +65,7 @@ var InvertedIndex = function () {
         }
       } else {
         result = false;
-        throw new Error('Invalid JSON Object');
+        throw new Error('Invalid JSON Array');
       }
       return result;
     }
@@ -87,7 +87,7 @@ var InvertedIndex = function () {
       var wordToken = {};
       if (this.checkIfArrayIsValid(fileContent) === true) {
         fileContent.forEach(function (fileCont) {
-          token += '' + fileCont.text;
+          token += fileCont.text + ' ';
         });
         token = token.replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' ');
         var fileIndex = 0;
@@ -127,6 +127,9 @@ var InvertedIndex = function () {
   }, {
     key: 'validateIndex',
     value: function validateIndex(data) {
+      if (!data) {
+        data = this.CreatedIndexObject;
+      }
       var result = true;
       for (var book in data) {
         if (Object.prototype.hasOwnProperty.call(data, book)) {

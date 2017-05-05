@@ -26,7 +26,7 @@ class InvertedIndex {
     if (typeof data === 'object') {
       if (data.length === undefined && data[0] === undefined) {
         result = false;
-        throw new Error('An Object but not a JSON Array');
+        throw new Error('Invalid JSON Array');
       } else {
         if (data.length === 0) {
           result = false;
@@ -38,7 +38,7 @@ class InvertedIndex {
             const fileTextType = typeof file.text;
             const fileText = file.text;
             if ((fileTitleType !== 'string' || fileTitle === ' ') || (fileTextType !== 'string' || fileText === ' ')) {
-              throw new Error('file is malformed');
+              throw new Error('File is malformed');
             } else {
               result = true;
             }
@@ -47,7 +47,7 @@ class InvertedIndex {
       }
     } else {
       result = false;
-      throw new Error('Not an Object');
+      throw new Error('Invalid JSON Array');
     }
     return result;
   }
@@ -66,7 +66,7 @@ class InvertedIndex {
     const wordToken = {};
     if (this.checkIfArrayIsValid(fileContent) === true) {
       fileContent.forEach((fileCont) => {
-        token += `${fileCont.text}`;
+        token += `${fileCont.text} `;
       });
       token = token.replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' ');
       let fileIndex = 0;
@@ -103,6 +103,9 @@ class InvertedIndex {
    * @return {boolean}     the result of he validity test true means valid;
    */
   validateIndex(data) {
+    if (!data) {
+      data = this.CreatedIndexObject;
+    }
     let result = true;
     for (const book in data) {
       if (Object.prototype.hasOwnProperty.call(data, book)) {

@@ -128,22 +128,18 @@ class InvertedIndex {
    * @return {array}       processed array
    */
   resolveTerms(terms) {
-    const searchTerms = [];
+    let searchTerms = [];
     if (terms.length === 1) {
-      terms = terms[0];
-    }
-    terms.forEach((indTerm) => {
-      if (typeof indTerm === 'string' || typeof indTerm === 'number') {
-        searchTerms.push(indTerm.toLowerCase());
-      } else {
-        if ((indTerm.length === 'undefined')) {
-          throw new Error('Invalid search Term');
-        }
-        indTerm.forEach((indTermInArray) => {
-          searchTerms.push(indTermInArray.toLowerCase());
-        });
+      if (typeof terms[0] === 'string') {
+        searchTerms.push(terms[0]);
+        return searchTerms;
+      } else if (Array.isArray(terms[0])) {
+        terms = terms[0];
+        searchTerms = [].concat([], ...terms);
       }
-    });
+    } else {
+      searchTerms = [].concat([], ...terms);
+    }
     return searchTerms;
   }
   /**
@@ -154,7 +150,7 @@ class InvertedIndex {
    * @return {object}      result of the branch
    */
   search(base, terms) {
-    const searchIndexResult = [];
+    const searchIndexResult = {};
     terms.forEach((term) => {
       if (Object.prototype.hasOwnProperty.call(base, term)) {
         searchIndexResult[term] = base[term];
@@ -180,10 +176,22 @@ class InvertedIndex {
         const searchTerms = this.resolveTerms(terms);
         const searchBase = index[fileName];
         searchIndexResults = this.search(searchBase, searchTerms);
-      } else {
-        const searchTerms = this.resolveTerms(fileName);
+      } else if (/\.json$/g.test(fileName)) {
+        const searchTerms = this.resolveTerms(terms);
         const searchIndexResult = {};
-        for (const book in index){
+        for (const book in index) {
+          if (Object.prototype.hasOwnProperty.call(index, book)) {
+            const searchBase = index[book];
+            const tempSearchResult = this.search(searchBase, searchTerms);
+            searchIndexResult[book] = tempSearchResult;
+          }
+        }
+        searchIndexResults = searchIndexResult;
+      } else {
+        terms.push(fileName);
+        const searchTerms = this.resolveTerms(terms);
+        const searchIndexResult = {};
+        for (const book in index) {
           if (Object.prototype.hasOwnProperty.call(index, book)) {
             const searchBase = index[book];
             const tempSearchResult = this.search(searchBase, searchTerms);

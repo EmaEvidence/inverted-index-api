@@ -8,6 +8,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /* eslint linebreak-style: ["error", "windows"]*/
@@ -157,20 +159,20 @@ var InvertedIndex = function () {
     value: function resolveTerms(terms) {
       var searchTerms = [];
       if (terms.length === 1) {
-        terms = terms[0];
-      }
-      terms.forEach(function (indTerm) {
-        if (typeof indTerm === 'string' || typeof indTerm === 'number') {
-          searchTerms.push(indTerm.toLowerCase());
-        } else {
-          if (indTerm.length === 'undefined') {
-            throw new Error('Invalid search Term');
-          }
-          indTerm.forEach(function (indTermInArray) {
-            searchTerms.push(indTermInArray.toLowerCase());
-          });
+        if (typeof terms[0] === 'string') {
+          searchTerms.push(terms[0]);
+          return searchTerms;
+        } else if (Array.isArray(terms[0])) {
+          var _ref;
+
+          terms = terms[0];
+          searchTerms = (_ref = []).concat.apply(_ref, [[]].concat(_toConsumableArray(terms)));
         }
-      });
+      } else {
+        var _ref2;
+
+        searchTerms = (_ref2 = []).concat.apply(_ref2, [[]].concat(_toConsumableArray(terms)));
+      }
       return searchTerms;
     }
     /**
@@ -184,7 +186,7 @@ var InvertedIndex = function () {
   }, {
     key: 'search',
     value: function search(base, terms) {
-      var searchIndexResult = [];
+      var searchIndexResult = {};
       terms.forEach(function (term) {
         if (Object.prototype.hasOwnProperty.call(base, term)) {
           searchIndexResult[term] = base[term];
@@ -217,8 +219,8 @@ var InvertedIndex = function () {
           var searchTerms = this.resolveTerms(terms);
           var searchBase = index[fileName];
           searchIndexResults = this.search(searchBase, searchTerms);
-        } else {
-          var _searchTerms = this.resolveTerms(fileName);
+        } else if (/\.json$/g.test(fileName)) {
+          var _searchTerms = this.resolveTerms(terms);
           var searchIndexResult = {};
           for (var book in index) {
             if (Object.prototype.hasOwnProperty.call(index, book)) {
@@ -228,6 +230,18 @@ var InvertedIndex = function () {
             }
           }
           searchIndexResults = searchIndexResult;
+        } else {
+          terms.push(fileName);
+          var _searchTerms2 = this.resolveTerms(terms);
+          var _searchIndexResult = {};
+          for (var _book in index) {
+            if (Object.prototype.hasOwnProperty.call(index, _book)) {
+              var _searchBase2 = index[_book];
+              var _tempSearchResult = this.search(_searchBase2, _searchTerms2);
+              _searchIndexResult[_book] = _tempSearchResult;
+            }
+          }
+          searchIndexResults = _searchIndexResult;
         }
       }
       return searchIndexResults;

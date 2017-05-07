@@ -54,16 +54,16 @@ describe('When an index, filename and search terms is passed to searchIndex meth
     const invertIndex = new InvertedIndex();
     const fileName = 'book1.json';
     invertIndex.createIndex(fileName, valid);
-    const result = { a: '-', alice: '-', when: [0, 1, 2], we: [0, 1, 2], help: '-' };
+    const results = { a: '-', alice: '-', when: [0, 1, 2], we: [0, 1, 2], help: '-' };
     const arrayOfTerms = [['a', 'alice'], 'when', 'we', ['help']];
-    expect(invertIndex.searchIndex(invertIndex.CreatedIndexObject, 'book1.json', arrayOfTerms)).toEqual(result);
+    expect(invertIndex.searchIndex(invertIndex.CreatedIndexObject, 'book1.json', arrayOfTerms)).toEqual(results);
   });
   it('should return correct search result varied search terms', () => {
     const invertIndex = new InvertedIndex();
     const fileName = 'book1.json';
     invertIndex.createIndex(fileName, valid);
-    const result = { 'book1.json': { a: '-', alice: '-', when: [0, 1, 2], we: [0, 1, 2], help: '-' } };
-    expect(invertIndex.searchIndex(invertIndex.CreatedIndexObject, 'book1.json', ['a', 'alice'], 'when', 'we', ['help'])).toEqual(result);
+    const results = { 'book1.json': { a: '-', alice: '-', when: [0, 1, 2], we: [0, 1, 2], help: '-' } };
+    expect(invertIndex.searchIndex(invertIndex.CreatedIndexObject, 'book1.json', ['a', 'alice'], 'when', 'we', ['help'])).toEqual(results);
   });
 });
 
@@ -75,13 +75,13 @@ describe('When an index and search terms is passed to searchIndex method and fil
     const fileName2 = 'book2.json';
     invertIndex.createIndex(fileName2, anothervalid);
     const arrayOfTerms = [['a', 'alice'], 'when', 'we', ['help']];
-    const result = { 'book1.json': { a: '-',
+    const results = { 'book1.json': { a: '-',
       alice: '-',
       when: [0, 1, 2],
       we: [0, 1, 2],
       help: '-' },
       'book2.json': { a: '-', alice: [1], when: [0, 2], we: [0, 2], help: '-' } };
-    expect(invertIndex.searchIndex(invertIndex.CreatedIndexObject, arrayOfTerms)).toEqual(result);
+    expect(invertIndex.searchIndex(invertIndex.CreatedIndexObject, arrayOfTerms)).toEqual(results);
   });
 });
 

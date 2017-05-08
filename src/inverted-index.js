@@ -57,7 +57,7 @@ class InvertedIndex {
    *
    * @param  {string} fileName    the name of the file to create index from
    * @param  {JSON} fileContent the file to create index from
-   * @return {JSON}             the result of the created Array.
+   * @return {JSON}  indexObject   the result of the created Array.
    */
   createIndex(fileName, fileContent) {
     this.fileName = fileName;
@@ -69,8 +69,6 @@ class InvertedIndex {
         token += `${individualFileContent.text} `;
       });
       token = token.replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' ');
-      // new set to make all word unique
-      // let fileIndex = 0;
       fileContent.forEach((individualFileContent, index) => {
         token.forEach((word) => {
           if (!Object.prototype.hasOwnProperty.call(wordToken, word) && word !== '') {
@@ -86,13 +84,9 @@ class InvertedIndex {
             }
           }
         });
-      //  fileIndex += 1;
       });
     }
-    // this.indexObject = wordToken;
-    // return token;
     this.CreatedIndexObject[this.fileName] = wordToken;
-    // return wordToken;
     const indexObject = this.CreatedIndexObject;
     return indexObject;
   }
@@ -156,7 +150,6 @@ class InvertedIndex {
       if (Object.prototype.hasOwnProperty.call(base, term)) {
         searchIndexResult[term] = base[term];
       } else {
-        // empty string implement in test
         searchIndexResult[term] = '';
       }
     });
@@ -173,8 +166,10 @@ class InvertedIndex {
     let result = true;
     if (!Array.isArray(terms)) {
       result = false;
-    } else if (terms === []) {
+    } else if (terms.length === 0) {
       result = false;
+    } else {
+      result = true;
     }
     return result;
   }
@@ -184,7 +179,7 @@ class InvertedIndex {
    *
    * @param  {array} index    the index to search from
    * @param  {string} fileName the name of the file to search from optional
-   * @return {JSON}          search index
+   * @return {JSON} searchIndexResults  search index
    */
   searchIndex(index, fileName, ...terms) {
     let searchIndexResults = '';

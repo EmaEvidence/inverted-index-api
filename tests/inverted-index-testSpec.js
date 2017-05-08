@@ -47,7 +47,7 @@ describe('When an index, filename and search terms is passed to searchIndex meth
   it('should return correct search result for array of terms', () => {
     const fileName = 'book1.json';
     invertIndex.createIndex(fileName, valid);
-    const results = { a: '-', alice: '', when: [0, 1, 2], we: [0, 1, 2], help: '' };
+    const results = { a: '', alice: '', when: [0, 1, 2], we: [0, 1, 2], help: '' };
     const arrayOfTerms = [['a', 'alice'], 'when', 'we', ['help']];
     expect(invertIndex.searchIndex(invertIndex.CreatedIndexObject, 'book1.json', arrayOfTerms)).toEqual(results);
   });
@@ -66,7 +66,7 @@ describe('When an index and search terms is passed to searchIndex method and fil
     const fileName2 = 'book2.json';
     invertIndex.createIndex(fileName2, anothervalid);
     const arrayOfTerms = [['a', 'alice'], 'when', 'we', ['help']];
-    const results = { 'book1.json': { a: '-',
+    const results = { 'book1.json': { a: '',
       alice: '',
       when: [0, 1, 2],
       we: [0, 1, 2],
@@ -77,37 +77,19 @@ describe('When an index and search terms is passed to searchIndex method and fil
 });
 
 describe('When an invalid Index is supplied to searchIndex method', () => {
-  it('should return an error invalid index', () => {
-    const invalidindex = {};
-    const fileName = 'book1.json';
-    invertIndex.createIndex(fileName, valid);
-    expect(invertIndex.validateIndex(invalidindex)).toThrow('Invalid Index');
+  it('should return false when an empty object is passed', () => {
+    expect(invertIndex.validateTerms({})).toBe(false);
   });
-  it('should return an error invalid index', () => {
-    const invalidindex = { book: 'sssffsf' };
-    const fileName = 'book1.json';
-    invertIndex.createIndex(fileName, valid);
-    expect(invertIndex.validateIndex(invalidindex)).toThrow('Invalid Index');
-  });
-  it('should return an error invalid index', () => {
-    const invalidindex = [];
-    const fileName = 'book1.json';
-    invertIndex.createIndex(fileName, valid);
-    expect(invertIndex.validateIndex(invalidindex)).toThrow('Invalid Index');
+  it('should return false when an empty array is passed', () => {
+    expect(invertIndex.validateTerms([])).toBe(false);
   });
 });
 
-describe('When an invalid term is supplied to searchIndex method', () => {
-  it('should return an error invalid term', () => {
-    const invalidTerm = [];
-    const fileName = 'book1.json';
-    invertIndex.createIndex(fileName, valid);
-    expect(invertIndex.validateTerms(invalidTerm)).toThrow('Invalid Index');
+describe('When a valid term is supplied to searchIndex method', () => {
+  it('should return true for valid search terms', () => {
+    expect(invertIndex.validateTerms(['we', 'men', ['alice', 'ade'], 'man'])).toBe(true);
   });
-  it('should return an error invalid term', () => {
-    const invalidTerm = [];
-    const fileName = 'book1.json';
-    invertIndex.createIndex(fileName, valid);
-    expect(invertIndex.validateTerms(invalidTerm)).toThrow('Invalid Index');
+  it('should return true for valid search terms ', () => {
+    expect(invertIndex.validateTerms(['we are here'])).toBe(true);
   });
 });

@@ -88,23 +88,23 @@ var InvertedIndex = function () {
       var token = '';
       var wordToken = {};
       if (this.checkIfArrayIsValid(fileContent) === true) {
-        fileContent.forEach(function (fileCont) {
-          token += fileCont.text + ' ';
+        fileContent.forEach(function (individualFileContent) {
+          token += individualFileContent.text + ' ';
         });
         token = token.replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' ');
         var fileIndex = 0;
-        fileContent.forEach(function (fileCont) {
-          token.forEach(function (indToken) {
-            if (!Object.prototype.hasOwnProperty.call(wordToken, indToken) && indToken !== '') {
-              var searchResult = fileCont.text.toLowerCase().search(indToken);
+        fileContent.forEach(function (individualFileContent, index) {
+          token.forEach(function (word) {
+            if (!Object.prototype.hasOwnProperty.call(wordToken, word) && word !== '') {
+              var searchResult = individualFileContent.text.toLowerCase().search(word);
               if (searchResult >= 0) {
-                wordToken[indToken] = [fileIndex];
+                wordToken[word] = [index];
               }
-            } else if (Object.prototype.hasOwnProperty.call(wordToken, indToken) && indToken !== '') {
-              var _searchResult = fileCont.text.toLowerCase().search(indToken);
+            } else if (Object.prototype.hasOwnProperty.call(wordToken, word) && word !== '') {
+              var _searchResult = individualFileContent.text.toLowerCase().search(word);
               if (_searchResult >= 0) {
-                var alreadyIndex = wordToken[indToken];
-                wordToken[indToken] = Array.from(new Set(alreadyIndex.concat([fileIndex])));
+                var alreadyIndex = wordToken[word];
+                wordToken[word] = Array.from(new Set(alreadyIndex.concat([fileIndex])));
               }
             }
           });
@@ -198,6 +198,25 @@ var InvertedIndex = function () {
     }
 
     /**
+     * validateTerms - description
+     *
+     * @param  {type} terms description
+     * @return {type}       description
+     */
+
+  }, {
+    key: 'validateTerms',
+    value: function validateTerms(terms) {
+      var result = true;
+      if (!Array.isArray(terms)) {
+        result = false;
+      } else if (terms === []) {
+        result = false;
+      }
+      return result;
+    }
+
+    /**
      * searchIndex - generates the search index from parameters
      *
      * @param  {array} index    the index to search from
@@ -243,6 +262,8 @@ var InvertedIndex = function () {
           }
           searchIndexResults = _searchIndexResult;
         }
+      } else {
+        throw new Error('Invalid Index');
       }
       return searchIndexResults;
     }

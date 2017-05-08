@@ -9,7 +9,7 @@ import injectModules from 'gulp-inject-modules';
 
 
 gulp.task('transpile', () => {
-  return gulp.src('src/inverted-index.js')
+  return gulp.src('src/**.js')
   .pipe(babel({
     presets: ['es2015']
   }))
@@ -18,7 +18,7 @@ gulp.task('transpile', () => {
 
 gulp.task('default', ['run-test']);
 
-gulp.task('run-test', ['transpile'], () => {
+gulp.task('run-test', () => {
   return gulp.src(['tests/*Spec.js'])
   .pipe(jasmineNode({
     timeout: 10000
@@ -31,12 +31,11 @@ gulp.task('test', () => {
 });
 
 gulp.task('coverage', (e) => {
-  gulp.src(['./dist/*.js'])
+  gulp.src(['./src/*.js'])
     .pipe(istanbul())
     .pipe(istanbul.hookRequire())
     .on('finish', () => {
       gulp.src(['./tests/*.js'])
-        .pipe(babel())
         .pipe(injectModules())
         .pipe(jasmineNode())
 .pipe(istanbul.writeReports())
@@ -46,9 +45,9 @@ gulp.task('coverage', (e) => {
 });
 
 gulp.task('coveralls', ['test'], () => {
-  if (!process.env.CI) {
-    return;
-  }
-  return gulp.src('coverage/lcov.info')
+  return gulp.src('./coverage/lcov.info')
     .pipe(coveralls());
+});
+
+gulp.task('serve', () => {
 });

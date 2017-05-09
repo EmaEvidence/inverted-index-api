@@ -17,7 +17,7 @@ gulp.task('transpile', () => {
   .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('default', ['run-test']);
+gulp.task('default', ['transpile', 'coveralls']);
 
 gulp.task('run-test', () => {
   return gulp.src(['tests/*Spec.js'])

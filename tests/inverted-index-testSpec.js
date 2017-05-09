@@ -1,12 +1,15 @@
 /* eslint linebreak-style: ["error", "windows"]*/
 import expect from 'expect';
+import supertest from 'supertest';
 import InvertedIndex from '../src/inverted-index';
 import valid from '../fixtures/valid.json';
 import anothervalid from '../fixtures/anothervalid.json';
 import invalid from '../fixtures/invalid.json';
 import malformed from '../fixtures/malformed.json';
 import empty from '../fixtures/empty.json';
+import app from '../src/route';
 
+const api = supertest(app);
 const invertIndex = new InvertedIndex();
 describe('When a digitized book supplied as a JSON Array is passed in', () => {
   it('should return true for valid JSON ', () => {
@@ -91,5 +94,35 @@ describe('When a valid term is supplied to searchIndex method', () => {
   });
   it('should return true for valid search terms ', () => {
     expect(invertIndex.validateTerms(['we are here'])).toBe(true);
+  });
+});
+
+describe('When a valid term is supplied to searchIndex method', () => {
+  it('should return true for valid search terms', () => {
+    expect(invertIndex.validateTerms(['we', 'men', ['alice', 'ade'], 'man'])).toBe(true);
+  });
+  it('should return true for valid search terms ', () => {
+    expect(invertIndex.validateTerms(['we are here'])).toBe(true);
+  });
+});
+
+describe('When a valid term is supplied to searchIndex method', () => {
+  it('should return true for valid search terms', () => {
+    expect(invertIndex.validateTerms(['we', 'men', ['alice', 'ade'], 'man'])).toBe(true);
+  });
+  it('should return true for valid search terms ', () => {
+    expect(invertIndex.validateTerms(['we are here'])).toBe(true);
+  });
+});
+
+describe('create inverted index API endpoint', () => {
+  it('responds with the right status message', (done) => {
+    api.post('/api/v0/create')
+        .attach('book', './fixtures/valid.json')
+        .attach('book', './fixtures/anothervalid.json')
+        .end((err, res) => {
+          expect(res.status).toEqual(200);
+          done(err);
+        });
   });
 });

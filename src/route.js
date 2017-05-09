@@ -12,30 +12,37 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/api/v0/create', upload.array('book'), (req, res) => {
   const files = req.files;
-  files.forEach((file, fileIndex) => {
-    const bookName = file.originalname;
-    const path = file.path;
-    fs.readFile(path, 'utf8', (err, data) => {
-      if (err) {
-        res.send(err.message);
-      }
-      const processedData = JSON.parse(data);
-      try {
-        const b = invertedIndex.createIndex(bookName, processedData);
-        if (fileIndex === files.length - 1) {
-          res.json(b);
+  if (files === []) {
+    res.send('Please Upload a file');
+  } else {
+    files.forEach((file, fileIndex) => {
+      const bookName = file.originalname;
+      const path = file.path;
+      fs.readFile(path, 'utf8', (err, data) => {
+        if (err) {
+          res.send(err.message);
         }
-      } catch (err) {
-        res.send(err.message);
-      }
+        const processedData = JSON.parse(data);
+        try {
+          const b = invertedIndex.createIndex(bookName, processedData);
+          if (fileIndex === files.length - 1) {
+            res.json(b);
+          }
+        } catch (err) {
+          res.send(err.message);
+        }
+      });
     });
-  });
+  }
 });
 
 app.post('/api/v0/search', (req, res) => {
   const fileName = req.body.filename;
   const terms = req.body.terms;
   const index = invertedIndex.CreatedIndexObject;
+  if (terms === '' || terms === []) {
+    res.send('Please supply search terms');
+  }
   if (fileName === '') {
     const searchResult = invertedIndex.searchIndex(index, terms);
     res.send(searchResult);
@@ -47,3 +54,5 @@ app.post('/api/v0/search', (req, res) => {
 
 app.listen(3000);
 console.log('server is running at port 3000...');
+
+export default app;

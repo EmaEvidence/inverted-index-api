@@ -1,32 +1,44 @@
 import express from 'express';
 import multer from 'multer';
+import fs from 'fs';
+import bodyParser from 'body-parser';
 import InvertedIndex from '../src/inverted-index';
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, '/fixtures');
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${file.fieldname}`);
-  }
-});
-
-const upload = multer({ storage: storage })
 
 const app = express();
 const invertedIndex = new InvertedIndex();
+const upload = multer({ dest: 'fixtures/' });
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/api/v0/createIndex', (req, res) => {
-  // const a = req.single;
-  // invertedIndex.createIndex();
-  res.send('a');
+app.post('/api/v0/create', upload.array('book'), (req, res) => {
+  const files = req.files;
+  files.forEach((file, fileIndex) => {
+    const bookName = file.originalname;
+    const path = file.path;
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (err) {
+        res.send(err.message);
+      }
+      const processedData = JSON.parse(data);
+      try {
+        const b = invertedIndex.createIndex(bookName, processedData);
+        if (fileIndex === files.length - 1) {
+          res.json(b);
+        }
+      } catch (err) {
+        res.send(err.message);
+      }
+    });
+  });
 });
 
-app.post('/api/v0/searchindex', (req, res) => {
-  /* invertedIndex.searchIndex();
-  const searchResult = invertedIndex.searchIndex();
-  res.json(searchResult); */
-  res.send('me');
+app.post('/api/v0/search', (req, res) => {
+  const index = req.body.index;
+  const fileName = req.body.filename;
+  const terms = req.body.terms;
+  const searchResult = invertedIndex.searchIndex(index, fileName, terms);
+  res.send(searchResult);
 });
 
 app.listen(3000);
+console.log('server is running at port 3000...');

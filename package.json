@@ -27,11 +27,13 @@
     "url": "https://github.com/EmaEvidence/inverted-index-api/issues"
   },
   "dependencies": {
+    "body-parser": "^1.17.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "expect": "^1.20.2",
     "express": "^4.15.2",
+    "fs": "0.0.1-security",
     "g": "^2.0.1",
     "gulp": "^3.9.1",
     "gulp-babel-istanbul": "^1.6.0",

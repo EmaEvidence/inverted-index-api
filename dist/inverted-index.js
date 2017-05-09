@@ -87,7 +87,13 @@ var InvertedIndex = function () {
       this.fileContent = fileContent;
       var token = '';
       var wordToken = {};
-      if (this.checkIfArrayIsValid(fileContent) === true) {
+      var validity = true;
+      try {
+        validity = this.checkIfArrayIsValid(fileContent);
+      } catch (err) {
+        validity = err;
+      }
+      if (validity) {
         fileContent.forEach(function (individualFileContent) {
           token += individualFileContent.text + ' ';
         });

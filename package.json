@@ -10,7 +10,8 @@
     "test": "gulp run-test",
     "dev": "nodemon --exec babel-node src/inverted-index.js",
     "prestart": "babel src --out-dir dist",
-    "start": "node dist/inverted-index.js"
+    "start": "nodemon --exec babel-node src/route.js",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "express": "^4.15.2",
     "g": "^2.0.1",
     "gulp": "^3.9.1",
+    "gulp-babel-istanbul": "^1.6.0",
     "gulp-coveralls": "^0.1.4",
     "gulp-inject-modules": "^1.0.0",
     "gulp-istanbul": "^1.1.1",

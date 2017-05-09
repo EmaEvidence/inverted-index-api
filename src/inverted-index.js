@@ -126,7 +126,7 @@ class InvertedIndex {
     let searchTerms = [];
     if (terms.length === 1) {
       if (typeof terms[0] === 'string') {
-        searchTerms.push(terms[0].replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' '));
+        searchTerms = (terms[0].replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' '));
         return searchTerms;
       } else if (Array.isArray(terms[0])) {
         terms = terms[0];

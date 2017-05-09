@@ -33,11 +33,16 @@ app.post('/api/v0/create', upload.array('book'), (req, res) => {
 });
 
 app.post('/api/v0/search', (req, res) => {
-  const index = req.body.index;
   const fileName = req.body.filename;
   const terms = req.body.terms;
-  const searchResult = invertedIndex.searchIndex(index, fileName, terms);
-  res.send(searchResult);
+  const index = invertedIndex.CreatedIndexObject;
+  if (fileName === '') {
+    const searchResult = invertedIndex.searchIndex(index, terms);
+    res.send(searchResult);
+  } else {
+    const searchResult = invertedIndex.searchIndex(index, fileName, terms);
+    res.send(searchResult);
+  }
 });
 
 app.listen(3000);

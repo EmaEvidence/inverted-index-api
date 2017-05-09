@@ -2,7 +2,16 @@ import express from 'express';
 import multer from 'multer';
 import InvertedIndex from '../src/inverted-index';
 
-const upload = multer({ dest: 'uploads/' });
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '/fixtures');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${file.fieldname}`);
+  }
+});
+
+const upload = multer({ storage: storage })
 
 const app = express();
 const invertedIndex = new InvertedIndex();

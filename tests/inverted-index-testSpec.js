@@ -160,7 +160,7 @@ describe('create inverted index API endpoint', () => {
         .end((err, res) => {
           const result = {
             'valid.json': {
-              when: [0, 7, 2],
+              when: [0, 1, 2],
               we: [0, 1, 2],
               were: [0, 1, 2],
               boys: [0],

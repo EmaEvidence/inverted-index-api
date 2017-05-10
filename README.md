@@ -46,6 +46,35 @@ The search API endpoint takes in the name of the file to search in (this is opti
    help: '' }
 };
 
-To install this project to your local machine clone the repo to a folder.
-npm run tests runs all tests and gives a coverage report based on the tests.
-npm run start starts the application and the app listens at port 3000 on your local machine.
+##### To install this project to your local machine follow the flowing steps;
+
+1. On GitHub, navigate to the main page of the [repository]().
+
+2. Click Clone or download button Under the repository name.
+
+3. Clone URL button In the Clone with HTTPs section, click  to copy the clone URL for the repository.
+
+4. Open Git Bash on your system.
+
+5. Change the current working directory to the location where you want the cloned directory to be made.
+
+6. Type git clone, and then paste the URL you copied in Step 2.
+
+7. Press Enter. Your local clone will be created.
+
+##### To Test with POSTMAN follow the steps below;
+
+1. Enter this link ```/api/v0/create``` to the URL of POSTMAN to hit the creating index endpoint.
+
+2. Send form-data with book as key and the JSON Array to use.
+
+3. Send the data.
+
+4. Enter this link ```/api/v0/search``` to the URL of POSTMAN to hit the search index endpoint
+
+5. Send the filename using x-www-form-urlencoded using filename as key and the terms to search for using term as key.
+
+```npm run-tests``` runs all tests and gives a coverage report based on the tests.
+```npm run start``` starts the application and the app listens at port 3000 on your local machine.
+
+This App is hosted on heroku, click [here]() to access the hosted App.

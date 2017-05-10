@@ -96,7 +96,7 @@ describe('When 3 parameters are passed to searchIndex', () => {
   });
 });
 
-describe('When an only index and searchterms are passed to searchIndex', () => {
+describe('When only index and searchterms are passed to searchIndex', () => {
   it('should search through all index', () => {
     const fileName = 'book1.json';
     invertIndex.createIndex(fileName, valid);
@@ -176,7 +176,6 @@ describe('create inverted index API endpoint', () => {
               girls: [2]
             }
           };
-          console.log(JSON.parse(res.text));
           expect(JSON.parse(res.text)).toEqual(result);
           done();
         });
@@ -259,4 +258,5 @@ describe('create inverted index API endpoint', () => {
         done();
       });
   });
+  app.close();
 });

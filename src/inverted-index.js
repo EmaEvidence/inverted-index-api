@@ -1,6 +1,6 @@
 /* eslint linebreak-style: ["error", "windows"]*/
 /**
- *  inverted index class that creates indices from supplied JSON Array objects.
+ *  The InvertedIndex class that creates indices from supplied JSON Array objects.
  */
 class InvertedIndex {
   /**
@@ -9,8 +9,6 @@ class InvertedIndex {
    * @return {type}  empty containers, empty objects
    */
   constructor() {
-    this.fileName = '';
-    this.fileContent = '';
     this.CreatedIndexObject = {};
     this.searchIndexResult = {};
   }
@@ -60,8 +58,6 @@ class InvertedIndex {
    * @return {JSON}  indexObject   the result of the created Array.
    */
   createIndex(fileName, fileContent) {
-    this.fileName = fileName;
-    this.fileContent = fileContent;
     let token = '';
     const wordToken = {};
     if (InvertedIndex.checkIfArrayIsValid(fileContent) === true) {
@@ -86,7 +82,7 @@ class InvertedIndex {
         });
       });
     }
-    this.CreatedIndexObject[this.fileName] = wordToken;
+    this.CreatedIndexObject[fileName] = wordToken;
     const indexObject = this.CreatedIndexObject;
     return indexObject;
   }
@@ -164,9 +160,7 @@ class InvertedIndex {
    */
   static validateTerms(terms) {
     let result = true;
-    if (!Array.isArray(terms)) {
-      result = false;
-    } else if (terms.length === 0) {
+    if (!Array.isArray(terms) || (terms.length === 0)) {
       result = false;
     } else {
       result = true;

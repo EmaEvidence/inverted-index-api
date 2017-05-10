@@ -62,7 +62,7 @@ app.post('/api/v0/search', (req, res) => {
 });
 
 const port = app.get('PORT');
-app.listen(process.env.PORT || port);
+const server = app.listen(process.env.PORT || port);
 console.log(`server is running at port ${port}`);
 
-export default app;
+export default server;

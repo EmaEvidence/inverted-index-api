@@ -6,7 +6,6 @@ import gulpBabelIstanbul from 'gulp-babel-istanbul';
 import coveralls from 'gulp-coveralls';
 import injectModules from 'gulp-inject-modules';
 
-
 gulp.task('transpile', () => {
   return gulp.src('src/**.js')
   .pipe(babel({

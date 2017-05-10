@@ -34,28 +34,24 @@ app.use(_bodyParser2.default.urlencoded({ extended: true }));
 
 app.post('/api/v0/create', upload.array('book'), function (req, res) {
   var files = req.files;
-  if (files === []) {
-    res.send('Please Upload a file');
-  } else {
-    files.forEach(function (file, fileIndex) {
-      var bookName = file.originalname;
-      var path = file.path;
-      _fs2.default.readFile(path, 'utf8', function (err, data) {
-        if (err) {
-          res.send(err.message);
+  files.forEach(function (file, fileIndex) {
+    var bookName = file.originalname;
+    var path = file.path;
+    _fs2.default.readFile(path, 'utf8', function (err, data) {
+      if (err) {
+        res.send(err.message);
+      }
+      var processedData = JSON.parse(data);
+      try {
+        var b = invertedIndex.createIndex(bookName, processedData);
+        if (fileIndex === files.length - 1) {
+          res.json(b);
         }
-        var processedData = JSON.parse(data);
-        try {
-          var b = invertedIndex.createIndex(bookName, processedData);
-          if (fileIndex === files.length - 1) {
-            res.json(b);
-          }
-        } catch (err) {
-          res.send(err.message);
-        }
-      });
+      } catch (err) {
+        res.send(err.message);
+      }
     });
-  }
+  });
 });
 
 app.post('/api/v0/search', function (req, res) {

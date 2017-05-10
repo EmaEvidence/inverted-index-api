@@ -1,12 +1,10 @@
 import gulp from 'gulp';
 import jasmineNode from 'gulp-jasmine-node';
 import babel from 'gulp-babel';
-// import istanbul from 'gulp-istanbul';
 import istanbulReport from 'gulp-istanbul-report';
 import gulpBabelIstanbul from 'gulp-babel-istanbul';
 import coveralls from 'gulp-coveralls';
 import injectModules from 'gulp-inject-modules';
-// import codacy from 'gulp-codacy';
 
 
 gulp.task('transpile', () => {

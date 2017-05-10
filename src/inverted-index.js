@@ -1,6 +1,6 @@
 /* eslint linebreak-style: ["error", "windows"]*/
 /**
- * the inverted index class that creates indices from supplied JSON Array objects.
+ *  inverted index class that creates indices from supplied JSON Array objects.
  */
 class InvertedIndex {
   /**
@@ -19,9 +19,9 @@ class InvertedIndex {
    * checkIfArrayIsValid - checks the validity of the JSON Array supplied to the class.
    *
    * @param  {object} data the JSON array
-   * @return {boolean} the result of the validity check.
+   * @return {boolean} result of the validity check.
    */
-  checkIfArrayIsValid(data) {
+  static checkIfArrayIsValid(data) {
     let result = '';
     if (typeof data === 'object') {
       if (data.length === undefined && data[0] === undefined) {
@@ -64,7 +64,7 @@ class InvertedIndex {
     this.fileContent = fileContent;
     let token = '';
     const wordToken = {};
-    if (this.checkIfArrayIsValid(fileContent) === true) {
+    if (InvertedIndex.checkIfArrayIsValid(fileContent) === true) {
       fileContent.forEach((individualFileContent) => {
         token += `${individualFileContent.text} `;
       });
@@ -72,13 +72,13 @@ class InvertedIndex {
       fileContent.forEach((individualFileContent, index) => {
         token.forEach((word) => {
           if (!Object.prototype.hasOwnProperty.call(wordToken, word) && word !== '') {
-            const searchResult = (individualFileContent.text).toLowerCase().search(word);
-            if (searchResult >= 0) {
+            const result = (individualFileContent.text).toLowerCase().search(word);
+            if (result >= 0) {
               wordToken[word] = [index];
             }
           } else if (Object.prototype.hasOwnProperty.call(wordToken, word) && word !== '') {
-            const searchResult = (individualFileContent.text).toLowerCase().search(word);
-            if (searchResult >= 0) {
+            const result = (individualFileContent.text).toLowerCase().search(word);
+            if (result >= 0) {
               const alreadyIndex = wordToken[word];
               wordToken[word] = Array.from(new Set(alreadyIndex.concat([index])));
             }
@@ -95,7 +95,7 @@ class InvertedIndex {
    * validateIndex - validates the created index.
    *
    * @param  {JSON} data the index to br validated
-   * @return {boolean}     the result of he validity test true means valid;
+   * @return {boolean} result  the result of he validity test true means valid;
    */
   validateIndex(data) {
     if (!data) {
@@ -122,7 +122,7 @@ class InvertedIndex {
    * @param  {array} terms the supplied search parameters
    * @return {array} searchTerms  processed array
    */
-  resolveTerms(terms) {
+  static resolveTerms(terms) {
     let searchTerms = [];
     if (terms.length === 1) {
       if (typeof terms[0] === 'string') {
@@ -142,9 +142,9 @@ class InvertedIndex {
    *
    * @param  {JSON} base  the JSON object to search from
    * @param  {array} terms the search parameters
-   * @return {object}      result of the branch
+   * @return {object} searchIndexResult result of the branch
    */
-  search(base, terms) {
+  static search(base, terms) {
     const searchIndexResult = {};
     terms.forEach((term) => {
       if (Object.prototype.hasOwnProperty.call(base, term)) {
@@ -157,12 +157,12 @@ class InvertedIndex {
   }
 
   /**
-   * validateTerms - description
+   * validateTerms - checks the supplied search terms for error
    *
-   * @param  {type} terms description
-   * @return {type}       description
+   * @param  {array} terms data to be validated
+   * @return {boolean} result the result of thr validity check
    */
-  validateTerms(terms) {
+  static validateTerms(terms) {
     let result = true;
     if (!Array.isArray(terms)) {
       result = false;
@@ -175,7 +175,7 @@ class InvertedIndex {
   }
 
   /**
-   * searchIndex - generates the search index from parameters
+   * searchIndex - generates the search result from supplied parameters
    *
    * @param  {array} index    the index to search from
    * @param  {string} fileName the name of the file to search from optional
@@ -186,28 +186,28 @@ class InvertedIndex {
     const indexValidity = this.validateIndex(index);
     if (indexValidity) {
       if (arguments.length === 3) {
-        const searchTerms = this.resolveTerms(terms);
+        const searchTerms = InvertedIndex.resolveTerms(terms);
         const searchBase = index[fileName];
-        searchIndexResults = this.search(searchBase, searchTerms);
+        searchIndexResults = InvertedIndex.search(searchBase, searchTerms);
       } else if (/\.json$/g.test(fileName)) {
-        const searchTerms = this.resolveTerms(terms);
+        const searchTerms = InvertedIndex.resolveTerms(terms);
         const searchIndexResult = {};
         for (const book in index) {
           if (Object.prototype.hasOwnProperty.call(index, book)) {
             const searchBase = index[book];
-            const tempSearchResult = this.search(searchBase, searchTerms);
+            const tempSearchResult = InvertedIndex.search(searchBase, searchTerms);
             searchIndexResult[book] = tempSearchResult;
           }
         }
         searchIndexResults = searchIndexResult;
       } else {
         terms.push(fileName);
-        const searchTerms = this.resolveTerms(terms);
+        const searchTerms = InvertedIndex.resolveTerms(terms);
         const searchIndexResult = {};
         for (const book in index) {
           if (Object.prototype.hasOwnProperty.call(index, book)) {
             const searchBase = index[book];
-            const tempSearchResult = this.search(searchBase, searchTerms);
+            const tempSearchResult = InvertedIndex.search(searchBase, searchTerms);
             searchIndexResult[book] = tempSearchResult;
           }
         }

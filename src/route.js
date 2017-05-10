@@ -2,13 +2,24 @@ import express from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 import InvertedIndex from '../src/inverted-index';
 
+dotenv.config();
 const app = express();
 const invertedIndex = new InvertedIndex();
 const upload = multer({ dest: 'fixtures/' });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const NODE_ENV = process.env.NODE_ENV;
+
+if (NODE_ENV === 'PROD') {
+  app.set('PORT', process.env.PORT_PROD);
+} else if (NODE_ENV === 'DEV') {
+  app.set('PORT', process.env.PORT_DEV);
+} else {
+  app.set('PORT', process.env.PORT_TEST);
+}
 
 app.post('/api/v0/create', upload.array('book'), (req, res) => {
   const files = req.files;
@@ -20,6 +31,7 @@ app.post('/api/v0/create', upload.array('book'), (req, res) => {
         res.send(err.message);
       }
       const processedData = JSON.parse(data);
+      fs.unlink(path);
       try {
         const b = invertedIndex.createIndex(bookName, processedData);
         if (fileIndex === files.length - 1) {
@@ -49,7 +61,8 @@ app.post('/api/v0/search', (req, res) => {
   }
 });
 
-app.listen(3000);
-console.log('server is running at port 3000...');
+const port = app.get('PORT');
+app.listen(process.env.PORT || port);
+console.log(`server is running at port ${port}`);
 
 export default app;

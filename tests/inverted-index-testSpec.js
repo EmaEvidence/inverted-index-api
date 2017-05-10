@@ -153,6 +153,35 @@ describe('create inverted index API endpoint', () => {
         });
   });
 
+  it('should create an index when valid file is uploaded ', (done) => {
+    api.post('/api/v0/create')
+     .attach('book', './fixtures/valid.json')
+     .attach('book', './fixtures/anothervalid.json')
+        .end((err, res) => {
+          const result = {
+            'valid.json': {
+              when: [0, 7, 2],
+              we: [0, 1, 2],
+              were: [0, 1, 2],
+              boys: [0],
+              guys: [1, 2]
+            },
+            'anothervalid.json': {
+              when: [0, 2],
+              we: [0, 2],
+              were: [0, 2],
+              boys: [0],
+              am: [1],
+              alice: [1],
+              girls: [2]
+            }
+          };
+          console.log(JSON.parse(res.text));
+          expect(JSON.parse(res.text)).toEqual(result);
+          done();
+        });
+  });
+
   it('responds with the right status code for single file', (done) => {
     api.post('/api/v0/create')
         .attach('book', './fixtures/valid.json')
@@ -185,7 +214,7 @@ describe('create inverted index API endpoint', () => {
         .end(() => {
           api.post('/api/v0/search')
           .send({
-            searchTerms: ['understand', 'world'],
+            searchTerms: ['we', 'when'],
             fileName: 'valid.json'
           })
           .end((err, res) => {
@@ -200,6 +229,33 @@ describe('create inverted index API endpoint', () => {
       .attach('book', './fixtures/valid.json')
       .end((err, res) => {
         expect(typeof res.body).toEqual('object');
+        done();
+      });
+  });
+
+  it('should give an Error message when empty file is uploaded', (done) => {
+    api.post('/api/v0/create')
+   .attach('book', './fixtures/empty.json')
+      .end((err, res) => {
+        expect(res.text).toEqual('Book is Empty');
+        done();
+      });
+  });
+
+  it('should give an Error message when Malformed is uploaded ', (done) => {
+    api.post('/api/v0/create')
+   .attach('book', './fixtures/malformed.json')
+      .end((err, res) => {
+        expect(res.text).toEqual('File is malformed');
+        done();
+      });
+  });
+
+  it('should give an Error message when invalid is uploaded ', (done) => {
+    api.post('/api/v0/create')
+   .attach('book', './fixtures/invalid.json')
+      .end((err, res) => {
+        expect(res.text).toEqual('Invalid JSON Array');
         done();
       });
   });

@@ -14,7 +14,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /* eslint linebreak-style: ["error", "windows"]*/
 /**
- * the inverted index class that creates indices from supplied JSON Array objects.
+ *  inverted index class that creates indices from supplied JSON Array objects.
  */
 var InvertedIndex = function () {
   /**
@@ -35,42 +35,13 @@ var InvertedIndex = function () {
    * checkIfArrayIsValid - checks the validity of the JSON Array supplied to the class.
    *
    * @param  {object} data the JSON array
-   * @return {boolean} the result of the validity check.
+   * @return {boolean} result of the validity check.
    */
 
 
   _createClass(InvertedIndex, [{
-    key: 'checkIfArrayIsValid',
-    value: function checkIfArrayIsValid(data) {
-      var result = '';
-      if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') {
-        if (data.length === undefined && data[0] === undefined) {
-          result = false;
-          throw new Error('Invalid JSON Array');
-        } else {
-          if (data.length === 0) {
-            result = false;
-            throw new Error('Book is Empty');
-          } else {
-            data.forEach(function (file) {
-              var fileTitleType = _typeof(file.title);
-              var fileTitle = file.title;
-              var fileTextType = _typeof(file.text);
-              var fileText = file.text;
-              if (fileTitleType !== 'string' || fileTitle === ' ' || fileTextType !== 'string' || fileText === ' ') {
-                throw new Error('File is malformed');
-              } else {
-                result = true;
-              }
-            });
-          }
-        }
-      } else {
-        result = false;
-        throw new Error('Invalid JSON Array');
-      }
-      return result;
-    }
+    key: 'createIndex',
+
 
     /**
      * createIndex - creates indices from supplied JSON Array Object and stores it in a container.
@@ -79,15 +50,12 @@ var InvertedIndex = function () {
      * @param  {JSON} fileContent the file to create index from
      * @return {JSON}  indexObject   the result of the created Array.
      */
-
-  }, {
-    key: 'createIndex',
     value: function createIndex(fileName, fileContent) {
       this.fileName = fileName;
       this.fileContent = fileContent;
       var token = '';
       var wordToken = {};
-      if (this.checkIfArrayIsValid(fileContent) === true) {
+      if (InvertedIndex.checkIfArrayIsValid(fileContent) === true) {
         fileContent.forEach(function (individualFileContent) {
           token += individualFileContent.text + ' ';
         });
@@ -95,13 +63,13 @@ var InvertedIndex = function () {
         fileContent.forEach(function (individualFileContent, index) {
           token.forEach(function (word) {
             if (!Object.prototype.hasOwnProperty.call(wordToken, word) && word !== '') {
-              var searchResult = individualFileContent.text.toLowerCase().search(word);
-              if (searchResult >= 0) {
+              var result = individualFileContent.text.toLowerCase().search(word);
+              if (result >= 0) {
                 wordToken[word] = [index];
               }
             } else if (Object.prototype.hasOwnProperty.call(wordToken, word) && word !== '') {
-              var _searchResult = individualFileContent.text.toLowerCase().search(word);
-              if (_searchResult >= 0) {
+              var _result = individualFileContent.text.toLowerCase().search(word);
+              if (_result >= 0) {
                 var alreadyIndex = wordToken[word];
                 wordToken[word] = Array.from(new Set(alreadyIndex.concat([index])));
               }
@@ -118,7 +86,7 @@ var InvertedIndex = function () {
      * validateIndex - validates the created index.
      *
      * @param  {JSON} data the index to br validated
-     * @return {boolean}     the result of he validity test true means valid;
+     * @return {boolean} result  the result of he validity test true means valid;
      */
 
   }, {
@@ -150,6 +118,90 @@ var InvertedIndex = function () {
      */
 
   }, {
+    key: 'searchIndex',
+
+
+    /**
+     * searchIndex - generates the search result from supplied parameters
+     *
+     * @param  {array} index    the index to search from
+     * @param  {string} fileName the name of the file to search from optional
+     * @return {JSON} searchIndexResults  search index
+     */
+    value: function searchIndex(index, fileName) {
+      for (var _len = arguments.length, terms = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+        terms[_key - 2] = arguments[_key];
+      }
+
+      var searchIndexResults = '';
+      var indexValidity = this.validateIndex(index);
+      if (indexValidity) {
+        if (arguments.length === 3) {
+          var searchTerms = InvertedIndex.resolveTerms(terms);
+          var searchBase = index[fileName];
+          searchIndexResults = InvertedIndex.search(searchBase, searchTerms);
+        } else if (/\.json$/g.test(fileName)) {
+          var _searchTerms = InvertedIndex.resolveTerms(terms);
+          var searchIndexResult = {};
+          for (var book in index) {
+            if (Object.prototype.hasOwnProperty.call(index, book)) {
+              var _searchBase = index[book];
+              var tempSearchResult = InvertedIndex.search(_searchBase, _searchTerms);
+              searchIndexResult[book] = tempSearchResult;
+            }
+          }
+          searchIndexResults = searchIndexResult;
+        } else {
+          terms.push(fileName);
+          var _searchTerms2 = InvertedIndex.resolveTerms(terms);
+          var _searchIndexResult = {};
+          for (var _book in index) {
+            if (Object.prototype.hasOwnProperty.call(index, _book)) {
+              var _searchBase2 = index[_book];
+              var _tempSearchResult = InvertedIndex.search(_searchBase2, _searchTerms2);
+              _searchIndexResult[_book] = _tempSearchResult;
+            }
+          }
+          searchIndexResults = _searchIndexResult;
+        }
+      } else {
+        throw new Error('Invalid Index');
+      }
+      return searchIndexResults;
+    }
+  }], [{
+    key: 'checkIfArrayIsValid',
+    value: function checkIfArrayIsValid(data) {
+      var result = '';
+      if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') {
+        if (data.length === undefined && data[0] === undefined) {
+          result = false;
+          throw new Error('Invalid JSON Array');
+        } else {
+          if (data.length === 0) {
+            result = false;
+            throw new Error('Book is Empty');
+          } else {
+            data.forEach(function (file) {
+              var fileTitleType = _typeof(file.title);
+              var fileTitle = file.title;
+              var fileTextType = _typeof(file.text);
+              var fileText = file.text;
+              if (fileTitleType !== 'string' || fileTitle === ' ' || fileTextType !== 'string' || fileText === ' ') {
+                throw new Error('File is malformed');
+              } else {
+                result = true;
+              }
+            });
+          }
+        }
+      } else {
+        result = false;
+        throw new Error('Invalid JSON Array');
+      }
+      return result;
+    }
+  }, {
     key: 'resolveTerms',
     value: function resolveTerms(terms) {
       var searchTerms = [];
@@ -175,7 +227,7 @@ var InvertedIndex = function () {
      *
      * @param  {JSON} base  the JSON object to search from
      * @param  {array} terms the search parameters
-     * @return {object}      result of the branch
+     * @return {object} searchIndexResult result of the branch
      */
 
   }, {
@@ -193,10 +245,10 @@ var InvertedIndex = function () {
     }
 
     /**
-     * validateTerms - description
+     * validateTerms - checks the supplied search terms for error
      *
-     * @param  {type} terms description
-     * @return {type}       description
+     * @param  {array} terms data to be validated
+     * @return {boolean} result the result of thr validity check
      */
 
   }, {
@@ -211,58 +263,6 @@ var InvertedIndex = function () {
         result = true;
       }
       return result;
-    }
-
-    /**
-     * searchIndex - generates the search index from parameters
-     *
-     * @param  {array} index    the index to search from
-     * @param  {string} fileName the name of the file to search from optional
-     * @return {JSON} searchIndexResults  search index
-     */
-
-  }, {
-    key: 'searchIndex',
-    value: function searchIndex(index, fileName) {
-      for (var _len = arguments.length, terms = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-        terms[_key - 2] = arguments[_key];
-      }
-
-      var searchIndexResults = '';
-      var indexValidity = this.validateIndex(index);
-      if (indexValidity) {
-        if (arguments.length === 3) {
-          var searchTerms = this.resolveTerms(terms);
-          var searchBase = index[fileName];
-          searchIndexResults = this.search(searchBase, searchTerms);
-        } else if (/\.json$/g.test(fileName)) {
-          var _searchTerms = this.resolveTerms(terms);
-          var searchIndexResult = {};
-          for (var book in index) {
-            if (Object.prototype.hasOwnProperty.call(index, book)) {
-              var _searchBase = index[book];
-              var tempSearchResult = this.search(_searchBase, _searchTerms);
-              searchIndexResult[book] = tempSearchResult;
-            }
-          }
-          searchIndexResults = searchIndexResult;
-        } else {
-          terms.push(fileName);
-          var _searchTerms2 = this.resolveTerms(terms);
-          var _searchIndexResult = {};
-          for (var _book in index) {
-            if (Object.prototype.hasOwnProperty.call(index, _book)) {
-              var _searchBase2 = index[_book];
-              var _tempSearchResult = this.search(_searchBase2, _searchTerms2);
-              _searchIndexResult[_book] = _tempSearchResult;
-            }
-          }
-          searchIndexResults = _searchIndexResult;
-        }
-      } else {
-        throw new Error('Invalid Index');
-      }
-      return searchIndexResults;
     }
   }]);
 

@@ -74,9 +74,7 @@ You need to create a '.env' file like the example in the directory to contain th
 
 ##### To Test with POSTMAN follow the steps below;
 
-1. Enter this link to the URL of POSTMAN to hit the create index endpoint.
-    Locally: ```localhost:yoursetPORT/api/v0/create```
-    Remotely: ```/api/v0/create```
+1. Enter this link to the URL of POSTMAN to hit the create index endpoint.  Locally: ```localhost:yoursetPORT/api/v0/create```  Remotely: ```/api/v0/create```
 2. Send form-data with book as key and the JSON Array to use.
 
 3. Send the data.

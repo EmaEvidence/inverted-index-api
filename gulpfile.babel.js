@@ -5,6 +5,7 @@ import istanbulReport from 'gulp-istanbul-report';
 import gulpBabelIstanbul from 'gulp-babel-istanbul';
 import coveralls from 'gulp-coveralls';
 import injectModules from 'gulp-inject-modules';
+import nodemon from 'gulp-nodemon';
 
 gulp.task('transpile', () => {
   return gulp.src('src/**.js')
@@ -51,5 +52,7 @@ gulp.task('coveralls', ['coverage'], () => {
     .pipe(coveralls());
 });
 
-gulp.task('serve', () => {
+gulp.task('serve', ['babel'], () => {
+  nodemon({
+  });
 });

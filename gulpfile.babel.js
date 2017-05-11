@@ -8,7 +8,7 @@ import injectModules from 'gulp-inject-modules';
 import nodemon from 'gulp-nodemon';
 
 gulp.task('transpile', () => {
-  return gulp.src('src/**.js')
+  return gulp.src(['src/**.js', 'app.js'])
   .pipe(babel({
     presets: ['es2015']
   }))
@@ -52,7 +52,10 @@ gulp.task('coveralls', ['coverage'], () => {
     .pipe(coveralls());
 });
 
-gulp.task('serve', ['babel'], () => {
+gulp.task('serve', ['transpile'], () =>
   nodemon({
-  });
-});
+    script: 'dist/app.js',
+    ext: 'js',
+    env: { NODE_ENV: process.env.NODE_ENV }
+  })
+);

@@ -97,20 +97,22 @@ class InvertedIndex {
     if (!data) {
       data = this.CreatedIndexObject;
     }
-    let result = true;
-    for (const book in data) {
-      if (Object.prototype.hasOwnProperty.call(data, book)) {
-        for (const token in data[book]) {
-          if (Object.prototype.hasOwnProperty.call(data[book], token)) {
-            result = Array.isArray(data[book][token]);
-            if (result === false) {
-              return false;
-            }
-          }
+    let resultIfValid;
+    let resultIfInvalid = true;
+    const books = Object.keys(data);
+    books.forEach((book) => {
+      const tokens = Object.keys(data[book]);
+      tokens.forEach((token) => {
+        const result = Array.isArray(data[book][token]);
+        if (result === false) {
+          resultIfInvalid = false;
         }
-      }
-      return result;
+      });
+    });
+    if (resultIfInvalid !== undefined) {
+      resultIfValid = resultIfInvalid;
     }
+    return resultIfValid;
   }
   /**
    * resolveTerms -Processes the parameters to be sought for in the created Index

@@ -1,24 +1,23 @@
 /* eslint linebreak-style: ["error", "windows"]*/
 /**
- *  The InvertedIndex class that creates indices from supplied JSON Array objects.
- */
+*  The InvertedIndex class that creates indices from supplied JSON Array objects.
+*/
 class InvertedIndex {
-  /**
-   * constructor - creates containers for datas created in the class to be stored and accessed.
-   *
-   * @return {type}  empty containers, empty objects
-   */
+/**
+* constructor - creates containers for datas created in the class to be stored and accessed.
+*
+* @return {type}  empty containers, empty objects
+*/
   constructor() {
     this.CreatedIndexObject = {};
     this.searchIndexResult = {};
   }
-
-  /**
-   * checkIfArrayIsValid - checks the validity of the JSON Array supplied to the class.
-   *
-   * @param  {object} data the JSON array
-   * @return {boolean} result of the validity check.
-   */
+/**
+* checkIfArrayIsValid - checks the validity of the JSON Array supplied to the class.
+*
+* @param  {object} data the JSON array
+* @return {boolean} result of the validity check.
+*/
   static checkIfArrayIsValid(data) {
     let result = '';
     if (typeof data === 'object') {
@@ -49,14 +48,13 @@ class InvertedIndex {
     }
     return result;
   }
-
-  /**
-   * createIndex - creates indices from supplied JSON Array Object and stores it in a container.
-   *
-   * @param  {string} fileName    the name of the file to create index from
-   * @param  {JSON} fileContent the file to create index from
-   * @return {JSON}  indexObject   the result of the created Array.
-   */
+/**
+* createIndex - creates indices from supplied JSON Array Object and stores it in a container.
+*
+* @param  {string} fileName    the name of the file to create index from
+* @param  {JSON} fileContent the file to create index from
+* @return {JSON}  indexObject   the result of the created Array.
+*/
   createIndex(fileName, fileContent) {
     let token = '';
     const wordToken = {};
@@ -86,13 +84,12 @@ class InvertedIndex {
     const indexObject = this.CreatedIndexObject;
     return indexObject;
   }
-
-  /**
-   * validateIndex - validates the created index.
-   *
-   * @param  {JSON} data the index to br validated
-   * @return {boolean} result  the result of he validity test true means valid;
-   */
+/**
+* validateIndex - validates the created index.
+*
+* @param  {JSON} data the index to br validated
+* @return {boolean} result  the result of he validity test true means valid;
+*/
   validateIndex(data) {
     if (!data) {
       data = this.CreatedIndexObject;
@@ -114,12 +111,12 @@ class InvertedIndex {
     }
     return resultIfValid;
   }
-  /**
-   * resolveTerms -Processes the parameters to be sought for in the created Index
-   *
-   * @param  {array} terms the supplied search parameters
-   * @return {array} searchTerms  processed array
-   */
+/**
+* resolveTerms -Processes the parameters to be sought for in the created Index
+*
+* @param  {array} terms the supplied search parameters
+* @return {array} searchTerms  processed array
+*/
   static resolveTerms(terms) {
     let searchTerms = [];
     if (terms.length === 1) {
@@ -135,13 +132,13 @@ class InvertedIndex {
     }
     return searchTerms;
   }
-  /**
-   * search - searches thrugh the created index.
-   *
-   * @param  {JSON} base  the JSON object to search from
-   * @param  {array} terms the search parameters
-   * @return {object} searchIndexResult result of the branch
-   */
+/**
+* search - searches thrugh the created index.
+*
+* @param  {JSON} base  the JSON object to search from
+* @param  {array} terms the search parameters
+* @return {object} searchIndexResult result of the branch
+*/
   static search(base, terms) {
     const searchIndexResult = {};
     terms.forEach((term) => {
@@ -153,13 +150,12 @@ class InvertedIndex {
     });
     return searchIndexResult;
   }
-
-  /**
-   * validateTerms - checks the supplied search terms for error
-   *
-   * @param  {array} terms data to be validated
-   * @return {boolean} result the result of thr validity check
-   */
+/**
+* validateTerms - checks the supplied search terms for error
+*
+* @param  {array} terms data to be validated
+* @return {boolean} result the result of thr validity check
+*/
   static validateTerms(terms) {
     let result = true;
     if (!Array.isArray(terms) || (terms.length === 0)) {
@@ -169,15 +165,14 @@ class InvertedIndex {
     }
     return result;
   }
-
-  /**
-   * searchIndex - generates the search result from supplied parameters
-   * validates search terms by calling validateTerms method.
-   * resolves the search terms by calling resolveTerms method
-   * @param  {array} index    the index to search from
-   * @param  {string} fileName the name of the file to search from optional
-   * @return {JSON} searchIndexResults  search index
-   */
+/**
+* searchIndex - generates the search result from supplied parameters
+* validates search terms by calling validateTerms method.
+* resolves the search terms by calling resolveTerms method
+* @param  {array} index    the index to search from
+* @param  {string} fileName the name of the file to search from optional
+* @return {JSON} searchIndexResults  search index
+*/
   searchIndex(index, fileName, ...terms) {
     let searchIndexResults = '';
     const indexValidity = this.validateIndex(index);

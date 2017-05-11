@@ -7,7 +7,7 @@ import coveralls from 'gulp-coveralls';
 import injectModules from 'gulp-inject-modules';
 
 gulp.task('transpile', () => {
-  return gulp.src('src/**.js')
+  return gulp.src('src/**.js', 'app.js')
   .pipe(babel({
     presets: ['es2015']
   }))
@@ -25,11 +25,11 @@ gulp.task('run-test', () => {
 
 gulp.task('test', () => {
   gulp.src('./coverage/coverage.json')
-    .pipe(istanbulReport());
+  .pipe(istanbulReport());
 });
 
 gulp.task('coverage', (cb) => {
-  gulp.src(['src/inverted-index.js', 'src/route.js'])
+  gulp.src(['src/inverted-index.js', 'app.js'])
     .pipe(gulpBabelIstanbul())
     .pipe(injectModules())
     .on('finish', () => {

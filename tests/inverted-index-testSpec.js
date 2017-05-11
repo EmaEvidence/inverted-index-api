@@ -7,7 +7,8 @@ import anothervalid from '../fixtures/anothervalid.json';
 import invalid from '../fixtures/invalid.json';
 import malformed from '../fixtures/malformed.json';
 import empty from '../fixtures/empty.json';
-import app from '../src/route';
+// import app from '../src/route';
+import app from './../app';
 
 const api = supertest(app);
 const invertIndex = new InvertedIndex();
@@ -20,6 +21,7 @@ const index = {
     guys: [1, 2]
   }
 };
+
 describe('When a digitized book supplied as a JSON Array is passed in', () => {
   it('should return true for valid JSON ', () => {
     expect(InvertedIndex.checkIfArrayIsValid(valid)).toBe(true);
@@ -140,7 +142,6 @@ describe('When a valid term is supplied to searchIndex method', () => {
     expect(InvertedIndex.validateTerms(['we are here'])).toBe(true);
   });
 });
-
 
 describe('create inverted index API endpoint', () => {
   it('responds with the right status code for multiple file', (done) => {

@@ -170,7 +170,8 @@ class InvertedIndex {
 
   /**
    * searchIndex - generates the search result from supplied parameters
-   *
+   * validates search terms by calling validateTerms method.
+   * resolves the search terms by calling resolveTerms method
    * @param  {array} index    the index to search from
    * @param  {string} fileName the name of the file to search from optional
    * @return {JSON} searchIndexResults  search index
@@ -186,25 +187,23 @@ class InvertedIndex {
       } else if (/\.json$/g.test(fileName)) {
         const searchTerms = InvertedIndex.resolveTerms(terms);
         const searchIndexResult = {};
-        for (const book in index) {
-          if (Object.prototype.hasOwnProperty.call(index, book)) {
-            const searchBase = index[book];
-            const tempSearchResult = InvertedIndex.search(searchBase, searchTerms);
-            searchIndexResult[book] = tempSearchResult;
-          }
-        }
+        const books = Object.keys(index);
+        books.forEach((book) => {
+          const searchBase = index[book];
+          const tempSearchResult = InvertedIndex.search(searchBase, searchTerms);
+          searchIndexResult[book] = tempSearchResult;
+        });
         searchIndexResults = searchIndexResult;
       } else {
         terms.push(fileName);
         const searchTerms = InvertedIndex.resolveTerms(terms);
         const searchIndexResult = {};
-        for (const book in index) {
-          if (Object.prototype.hasOwnProperty.call(index, book)) {
-            const searchBase = index[book];
-            const tempSearchResult = InvertedIndex.search(searchBase, searchTerms);
-            searchIndexResult[book] = tempSearchResult;
-          }
-        }
+        const books = Object.keys(index);
+        books.forEach((book) => {
+          const searchBase = index[book];
+          const tempSearchResult = InvertedIndex.search(searchBase, searchTerms);
+          searchIndexResult[book] = tempSearchResult;
+        });
         searchIndexResults = searchIndexResult;
       }
     } else {

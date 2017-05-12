@@ -10,6 +10,11 @@ const upload = multer({ dest: 'fixtures/' });
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
+
+/**
+ * API endpoint for creating index takes in a file from the server and returns
+ * an index  of the file if it passes validity test.
+ */
 router.post('/api/v0/create', upload.array('book'), (req, res) => {
   if (req.files === undefined) {
     res.send('Please upload a file(JSON Array)');
@@ -18,25 +23,34 @@ router.post('/api/v0/create', upload.array('book'), (req, res) => {
     files.forEach((file, fileIndex) => {
       const bookName = file.originalname;
       const path = file.path;
-      fs.readFile(path, 'utf8', (err, data) => {
-        if (err) {
-          res.send(err.message);
-        }
-        const processedData = JSON.parse(data);
-        fs.unlink(path);
-        try {
-          const b = invertedIndex.createIndex(bookName, processedData);
-          if (fileIndex === files.length - 1) {
-            res.json(b);
+      if (/\.json$/g.test(bookName) || file.size < 1000) {
+        fs.readFile(path, 'utf8', (err, data) => {
+          if (err) {
+            res.send(err.message);
           }
-        } catch (err) {
-          res.send(err.message);
-        }
-      });
+          const processedData = JSON.parse(data);
+          fs.unlink(path);
+          try {
+            const b = invertedIndex.createIndex(bookName, processedData);
+            if (fileIndex === files.length - 1) {
+              res.json(b);
+            }
+          } catch (err) {
+            res.send(err.message);
+          }
+        });
+      } else {
+        fs.unlink(path);
+        res.send('Invalid File or File to large');
+      }
     });
   }
 });
 
+/**
+ *  API endpoint for searching for terms in an index
+ * takes in terms and the name of the file from which to server
+ */
 router.post('/api/v0/search', (req, res) => {
   const fileName = req.body.filename;
   const terms = req.body.terms;

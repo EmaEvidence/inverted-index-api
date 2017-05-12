@@ -113,7 +113,7 @@ class InvertedIndex {
   }
 /**
 * resolveTerms -Processes the parameters to be sought for in the created Index
-*
+* flattens the multidimensional arrays into a numeric array
 * @param  {array} terms the supplied search parameters
 * @return {array} searchTerms  processed array
 */

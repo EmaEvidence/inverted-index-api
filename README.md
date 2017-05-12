@@ -74,7 +74,7 @@ The numbers in the Array shows on which index in the book array the word exist a
 
 
 ```npm run-tests``` runs all tests and gives a coverage report based on the tests.
-```npm run start``` starts the application.
+```npm start``` starts the application.
 You need to create a '.env' file like the example in the directory to contain the port you want to use on your local machine.
 
 ##### To Test with POSTMAN follow the steps below;

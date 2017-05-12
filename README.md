@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/EmaEvidence/inverted-index-api.svg?branch=master)](https://travis-ci.org/EmaEvidence/inverted-index-api)
 [![Coverage Status](https://coveralls.io/repos/github/EmaEvidence/inverted-index-api/badge.svg?branch=endpoint)](https://coveralls.io/github/EmaEvidence/inverted-index-api?branch=endpoint)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/53bcc515421d4cd78bb312ab8d38bdc5)](https://www.codacy.com/app/EmaEvidence/inverted-index-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EmaEvidence/inverted-index-api&amp;utm_campaign=Badge_Grade)
+[![npm version](https://badge.fury.io/js/npm.svg)](https://badge.fury.io/js/npm)
 
 The Inverted Index is a technique used to implement efficient search functionality for software applications. This Project is an API that has two End points create, which receives a JSON array and creates an index for all words in the JSON Array and the search; which allows search through the created indices.
 #### Dependencies
@@ -9,22 +10,25 @@ The functionality of this web app being a node.js app depends on the following n
 1. [Express.js](https://www.npmjs.com/package/express): A Fast, opinionated, minimalist web framework for node which was used in routing this application.
 2. [Multer](https://www.npmjs.com/package/multer): This is the middleware that allows file upload to the API create Endpoint.
 3. [BodyParser](https://www.npmjs.com/package/body-parser): This module was used to collect search data sent from the client side to the routing page.
-4. [FS](https://www.npmjs.com/package/fs):This allows contents of the uploaded to be read and deleted after an index has being created from it.
+4. [FS](https://www.npmjs.com/package/fs):This allows contents of the uploaded file to be read and deleted after an index has being created from it.
+5. [Gulp](https://www.npmjs.com/package/gulp): This allows the automation of all processes.
+6. [Babel](https://www.npmjs.com/package/Babel): This project is written in ES6, babel transpiles the code to ES5.
+6. [Coveralls](https://www.npmjs.com/package/coveralls): Get the great coverage reporting of coveralls.io and add a cool coverage button ( like the one above ) to your README.
 
 The create API endpoint takes a JSON array like the one below;
 ```
 [
   {
-    "title":"Men",
-    "text":"When we were boys"
+    "title": "Men",
+    "text": "When we were boys"
   },
   {
-    "title":"Women",
-    "text":"When we were guys"
+    "title": "Women",
+    "text": "When we were guys"
   },
   {
-    "title":"Women",
-    "text":"When we were guys"
+    "title": "Women",
+    "text": "When we were guys"
   }
 ]
 ```
@@ -55,7 +59,8 @@ The numbers in the Array shows on which index in the book array the word exist a
 
 ##### To install this project to your local machine follow the flowing steps;
 
-1. Click Clone or download button Under the repository name.
+1. Click Clone or download button Under the repository name or copy the url below;
+    ```https://github.com/EmaEvidence/inverted-index-api.git```
 
 2. Click  to copy the clone URL for the repository.
 
@@ -74,16 +79,19 @@ You need to create a '.env' file like the example in the directory to contain th
 
 ##### To Test with POSTMAN follow the steps below;
 
-1. Enter this link to the URL of POSTMAN to hit the create index endpoint.  Locally: ```localhost:yoursetPORT/api/v0/create```  Remotely: ```/api/v0/create```
+1. Enter this link to the URL of POSTMAN to hit the create index endpoint;  
+    <p>Locally: ```localhost:yoursetPORT/api/v0/create``` </p>  
+    <p>Remotely: ```https://indexaa.herokuapp.com/api/v0/create``` </p>
 2. Send form-data with book as key and the JSON Array to use.
 
 3. Send the data.
 
-4. Enter this link ```/api/v0/search``` to the URL of POSTMAN to hit the search index endpoint
-
+4. Enter this link to the URL of POSTMAN to hit the search index endpoint;
+  <p>Locally: ```localhost:yoursetPORT/api/v0/search``` </p>
+  <p>Remotely: ```https://indexaa.herokuapp.com/api/v0/search``` </p>
 5. Send the filename using x-www-form-urlencoded using filename as key and the terms to search for using term as key.
 
-This App is hosted on Heroku, click [here]() to access the hosted App.
+This App is hosted on Heroku, click [here](https://indexaa.herokuapp.com) to access the hosted App.
 
 ##### This App can not do the following;
 1. Do not persist data. Once the APP is closed all created indices and search result are deleted.

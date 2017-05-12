@@ -7,7 +7,6 @@ import anothervalid from '../fixtures/anothervalid.json';
 import invalid from '../fixtures/invalid.json';
 import malformed from '../fixtures/malformed.json';
 import empty from '../fixtures/empty.json';
-// import app from '../src/route';
 import app from './../app';
 
 const api = supertest(app);

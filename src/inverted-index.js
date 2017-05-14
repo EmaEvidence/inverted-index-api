@@ -1,27 +1,24 @@
 /* eslint linebreak-style: ["error", "windows"]*/
 /**
- * the inverted index class that creates indices from supplied JSON Array objects.
- */
+*  The InvertedIndex class that creates indices from supplied JSON Array objects.
+*/
 class InvertedIndex {
-  /**
-   * constructor - creates containers for datas created in the class to be stored and accessed.
-   *
-   * @return {type}  empty containers, empty objects
-   */
+/**
+* constructor - creates containers for datas created in the class to be stored and accessed.
+*
+* @return {type}  empty containers, empty objects
+*/
   constructor() {
-    this.fileName = '';
-    this.fileContent = '';
     this.CreatedIndexObject = {};
     this.searchIndexResult = {};
   }
-
-  /**
-   * checkIfArrayIsValid - checks the validity of the JSON Array supplied to the class.
-   *
-   * @param  {object} data the JSON array
-   * @return {boolean} the result of the validity check.
-   */
-  checkIfArrayIsValid(data) {
+/**
+* checkIfArrayIsValid - checks the validity of the JSON Array supplied to the class.
+*
+* @param  {object} data the JSON array
+* @return {boolean} result of the validity check.
+*/
+  static checkIfArrayIsValid(data) {
     let result = '';
     if (typeof data === 'object') {
       if (data.length === undefined && data[0] === undefined) {
@@ -51,87 +48,80 @@ class InvertedIndex {
     }
     return result;
   }
-
-  /**
-   * createIndex - creates indices from supplied JSON Array Object and stores it in a container.
-   *
-   * @param  {string} fileName    the name of the file to create index from
-   * @param  {JSON} fileContent the file to create index from
-   * @return {JSON}             the result of the created Array.
-   */
+/**
+* createIndex - creates indices from supplied JSON Array Object and stores it in a container.
+*
+* @param  {string} fileName    the name of the file to create index from
+* @param  {JSON} fileContent the file to create index from
+* @return {JSON}  indexObject   the result of the created Array.
+*/
   createIndex(fileName, fileContent) {
-    this.fileName = fileName;
-    this.fileContent = fileContent;
     let token = '';
     const wordToken = {};
-    if (this.checkIfArrayIsValid(fileContent) === true) {
-      fileContent.forEach((fileCont) => {
-        token += `${fileCont.text} `;
+    if (InvertedIndex.checkIfArrayIsValid(fileContent) === true) {
+      fileContent.forEach((individualFileContent) => {
+        token += `${individualFileContent.text} `;
       });
       token = token.replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' ');
-      let fileIndex = 0;
-      fileContent.forEach((fileCont) => {
-        token.forEach((indToken) => {
-          if (!Object.prototype.hasOwnProperty.call(wordToken, indToken) && indToken !== '') {
-            const searchResult = (fileCont.text).toLowerCase().search(indToken);
-            if (searchResult >= 0) {
-              wordToken[indToken] = [fileIndex];
+      fileContent.forEach((individualFileContent, index) => {
+        token.forEach((word) => {
+          if (!Object.prototype.hasOwnProperty.call(wordToken, word) && word !== '') {
+            const result = (individualFileContent.text).toLowerCase().search(word);
+            if (result >= 0) {
+              wordToken[word] = [index];
             }
-          } else if (Object.prototype.hasOwnProperty.call(wordToken, indToken) && indToken !== '') {
-            const searchResult = (fileCont.text).toLowerCase().search(indToken);
-            if (searchResult >= 0) {
-              const alreadyIndex = wordToken[indToken];
-              wordToken[indToken] = Array.from(new Set(alreadyIndex.concat([fileIndex])));
+          } else if (Object.prototype.hasOwnProperty.call(wordToken, word) && word !== '') {
+            const result = (individualFileContent.text).toLowerCase().search(word);
+            if (result >= 0) {
+              const alreadyIndex = wordToken[word];
+              wordToken[word] = Array.from(new Set(alreadyIndex.concat([index])));
             }
           }
         });
-        fileIndex += 1;
       });
     }
-    // this.indexObject = wordToken;
-    // return token;
-    this.CreatedIndexObject[this.fileName] = wordToken;
-    // return wordToken;
+    this.CreatedIndexObject[fileName] = wordToken;
     const indexObject = this.CreatedIndexObject;
     return indexObject;
   }
-
-  /**
-   * validateIndex - validates the created index.
-   *
-   * @param  {JSON} data the index to br validated
-   * @return {boolean}     the result of he validity test true means valid;
-   */
+/**
+* validateIndex - validates the created index.
+*
+* @param  {JSON} data the index to br validated
+* @return {boolean} result  the result of he validity test true means valid;
+*/
   validateIndex(data) {
     if (!data) {
       data = this.CreatedIndexObject;
     }
-    let result = true;
-    for (const book in data) {
-      if (Object.prototype.hasOwnProperty.call(data, book)) {
-        for (const token in data[book]) {
-          if (Object.prototype.hasOwnProperty.call(data[book], token)) {
-            result = Array.isArray(data[book][token]);
-            if (result === false) {
-              return false;
-            }
-          }
+    let resultIfValid;
+    let resultIfInvalid = true;
+    const books = Object.keys(data);
+    books.forEach((book) => {
+      const tokens = Object.keys(data[book]);
+      tokens.forEach((token) => {
+        const result = Array.isArray(data[book][token]);
+        if (result === false) {
+          resultIfInvalid = false;
         }
-      }
-      return result;
+      });
+    });
+    if (resultIfInvalid !== undefined) {
+      resultIfValid = resultIfInvalid;
     }
+    return resultIfValid;
   }
-  /**
-   * resolveTerms -Processes the parameters to be sought for in the created Index
-   *
-   * @param  {array} terms the supplied search parameters
-   * @return {array}       processed array
-   */
-  resolveTerms(terms) {
+/**
+* resolveTerms -Processes the parameters to be sought for in the created Index
+* flattens the multidimensional arrays into a numeric array
+* @param  {array} terms the supplied search parameters
+* @return {array} searchTerms  processed array
+*/
+  static resolveTerms(terms) {
     let searchTerms = [];
     if (terms.length === 1) {
       if (typeof terms[0] === 'string') {
-        searchTerms.push(terms[0]);
+        searchTerms = (terms[0].replace(/[^a-zA-Z]/gi, ' ').toLowerCase().split(' '));
         return searchTerms;
       } else if (Array.isArray(terms[0])) {
         terms = terms[0];
@@ -142,64 +132,79 @@ class InvertedIndex {
     }
     return searchTerms;
   }
-  /**
-   * search - searches thrugh the created index.
-   *
-   * @param  {JSON} base  the JSON object to search from
-   * @param  {array} terms the search parameters
-   * @return {object}      result of the branch
-   */
-  search(base, terms) {
+/**
+* search - searches thrugh the created index.
+*
+* @param  {JSON} base  the JSON object to search from
+* @param  {array} terms the search parameters
+* @return {object} searchIndexResult result of the branch
+*/
+  static search(base, terms) {
     const searchIndexResult = {};
     terms.forEach((term) => {
       if (Object.prototype.hasOwnProperty.call(base, term)) {
         searchIndexResult[term] = base[term];
       } else {
-        searchIndexResult[term] = '-';
+        searchIndexResult[term] = '';
       }
     });
     return searchIndexResult;
   }
-
-  /**
-   * searchIndex - generates the search index from parameters
-   *
-   * @param  {array} index    the index to search from
-   * @param  {string} fileName the name of the file to search from optional
-   * @return {JSON}          search index
-   */
+/**
+* validateTerms - checks the supplied search terms for error
+*
+* @param  {array} terms data to be validated
+* @return {boolean} result the result of thr validity check
+*/
+  static validateTerms(terms) {
+    let result = true;
+    if (!Array.isArray(terms) || (terms.length === 0)) {
+      result = false;
+    } else {
+      result = true;
+    }
+    return result;
+  }
+/**
+* searchIndex - generates the search result from supplied parameters
+* validates search terms by calling validateTerms method.
+* resolves the search terms by calling resolveTerms method
+* @param  {array} index    the index to search from
+* @param  {string} fileName the name of the file to search from optional
+* @return {JSON} searchIndexResults  search index
+*/
   searchIndex(index, fileName, ...terms) {
     let searchIndexResults = '';
     const indexValidity = this.validateIndex(index);
     if (indexValidity) {
       if (arguments.length === 3) {
-        const searchTerms = this.resolveTerms(terms);
+        const searchTerms = InvertedIndex.resolveTerms(terms);
         const searchBase = index[fileName];
-        searchIndexResults = this.search(searchBase, searchTerms);
+        searchIndexResults = InvertedIndex.search(searchBase, searchTerms);
       } else if (/\.json$/g.test(fileName)) {
-        const searchTerms = this.resolveTerms(terms);
+        const searchTerms = InvertedIndex.resolveTerms(terms);
         const searchIndexResult = {};
-        for (const book in index) {
-          if (Object.prototype.hasOwnProperty.call(index, book)) {
-            const searchBase = index[book];
-            const tempSearchResult = this.search(searchBase, searchTerms);
-            searchIndexResult[book] = tempSearchResult;
-          }
-        }
+        const books = Object.keys(index);
+        books.forEach((book) => {
+          const searchBase = index[book];
+          const tempSearchResult = InvertedIndex.search(searchBase, searchTerms);
+          searchIndexResult[book] = tempSearchResult;
+        });
         searchIndexResults = searchIndexResult;
       } else {
         terms.push(fileName);
-        const searchTerms = this.resolveTerms(terms);
+        const searchTerms = InvertedIndex.resolveTerms(terms);
         const searchIndexResult = {};
-        for (const book in index) {
-          if (Object.prototype.hasOwnProperty.call(index, book)) {
-            const searchBase = index[book];
-            const tempSearchResult = this.search(searchBase, searchTerms);
-            searchIndexResult[book] = tempSearchResult;
-          }
-        }
+        const books = Object.keys(index);
+        books.forEach((book) => {
+          const searchBase = index[book];
+          const tempSearchResult = InvertedIndex.search(searchBase, searchTerms);
+          searchIndexResult[book] = tempSearchResult;
+        });
         searchIndexResults = searchIndexResult;
       }
+    } else {
+      throw new Error('Invalid Index');
     }
     return searchIndexResults;
   }

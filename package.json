@@ -10,7 +10,8 @@
     "test": "gulp run-test",
     "dev": "nodemon --exec babel-node src/inverted-index.js",
     "prestart": "babel src --out-dir dist",
-    "start": "node dist/inverted-index.js"
+    "start": "nodemon --exec babel-node app.js",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -26,23 +27,26 @@
     "url": "https://github.com/EmaEvidence/inverted-index-api/issues"
   },
   "dependencies": {
+    "body-parser": "^1.17.1",
+    "dotenv": "^4.0.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "expect": "^1.20.2",
     "express": "^4.15.2",
+    "fs": "0.0.1-security",
     "g": "^2.0.1",
     "gulp": "^3.9.1",
+    "gulp-babel-istanbul": "^1.6.0",
     "gulp-coveralls": "^0.1.4",
+    "gulp-exit": "0.0.2",
     "gulp-inject-modules": "^1.0.0",
     "gulp-istanbul": "^1.1.1",
     "gulp-jasmine": "^2.4.2",
     "jasmine": "^2.6.0",
     "jasmine-node": "^1.14.5",
     "multer": "^1.3.0",
-    "supertest": "^3.0.0"
-  },
-  "devDependencies": {
+    "supertest": "^3.0.0",
     "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
@@ -54,6 +58,10 @@
     "gulp-babel": "^6.1.2",
     "gulp-istanbul-report": "0.0.1",
     "gulp-jasmine-node": "^1.0.7",
-    "gulp-nodemon": "^2.2.1"
+    "gulp-nodemon": "^2.2.1",
+    "nodemon": "^1.11.0"
+  },
+  "devDependencies": {
+
   }
 }

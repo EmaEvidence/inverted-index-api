@@ -1,12 +1,14 @@
 import gulp from 'gulp';
 import jasmineNode from 'gulp-jasmine-node';
 import babel from 'gulp-babel';
-import istanbulReport from 'gulp-istanbul-report';
 import gulpBabelIstanbul from 'gulp-babel-istanbul';
 import coveralls from 'gulp-coveralls';
 import injectModules from 'gulp-inject-modules';
 import nodemon from 'gulp-nodemon';
 
+/**
+ *gulp task for transpiling ES6 to ES5
+ */
 gulp.task('transpile', () => {
   return gulp.src(['src/**.js', 'app.js'])
   .pipe(babel({
@@ -15,8 +17,14 @@ gulp.task('transpile', () => {
   .pipe(gulp.dest('dist/'));
 });
 
+/**
+ *default gulp task that runs whenever gulp is called without specifing a task
+ */
 gulp.task('default', ['transpile', 'coveralls']);
 
+/**
+ * Gulp task for running tests Specs
+ */
 gulp.task('run-test', () => {
   return gulp.src(['tests/*Spec.js'])
   .pipe(jasmineNode({
@@ -24,11 +32,9 @@ gulp.task('run-test', () => {
   }));
 });
 
-gulp.task('test', () => {
-  gulp.src('./coverage/coverage.json')
-  .pipe(istanbulReport());
-});
-
+/**
+ * gulp task for getting coverage report on tests
+ */
 gulp.task('coverage', (cb) => {
   gulp.src(['src/inverted-index.js', 'app.js'])
     .pipe(gulpBabelIstanbul())
@@ -44,6 +50,9 @@ gulp.task('coverage', (cb) => {
     });
 });
 
+/**
+ * gulp task to send coverage reports to coveralls.io
+ */
 gulp.task('coveralls', ['coverage'], () => {
   if (!process.env.CI) {
     return;
@@ -52,9 +61,12 @@ gulp.task('coveralls', ['coverage'], () => {
     .pipe(coveralls());
 });
 
+/**
+ * gulp task to serve the App on localhost
+ */
 gulp.task('serve', ['transpile'], () =>
   nodemon({
-    script: 'dist/app.js',
+    script: 'nodemon --exec babel-node app.js',
     ext: 'js',
     env: { NODE_ENV: process.env.NODE_ENV }
   })
